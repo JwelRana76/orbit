@@ -1,0 +1,85 @@
+.page-header li {
+  color: black;
+}
+
+.page-header .right-content,
+.page-header h3 {
+  line-height: 50px;
+}
+
+.page-header a:hover {
+  text-decoration: none;
+}
+
+.dataTables_length {
+  width: 30% !important;
+  float: left !important;
+}
+
+.dt-buttons {
+  width: 40% !important;
+  float: left !important;
+  text-align: center !important;
+}
+
+.delete_items_from_dt {
+  background: red;
+  color: white;
+  border: 1px solid blue;
+  border-radius: 5px;
+}
+
+.buttons-print {
+  background: green;
+  color: white;
+  border: 1px solid blue;
+  border-radius: 5px;
+}
+
+.buttons-copy {
+  background: #322653;
+  color: white;
+  border: 1px solid black;
+  border-radius: 5px;
+}
+
+.buttons-collection {
+  background: #982176;
+  color: white;
+  border: 1px solid blue;
+  border-radius: 5px;
+}
+
+.table-dataTable thead {
+  background: #322653;
+}
+
+.dataTables_filter {
+  width: 30% !important;
+  float: left !important;
+  text-align: center !important;
+}
+
+.action-button {
+  border: none;
+  background: none;
+}
+
+@media only screen and (max-width: 600px) {
+  .dataTables_length {
+    width: 100% !important;
+    float: left !important;
+  }
+
+  .dt-buttons {
+    width: 100% !important;
+    float: left !important;
+    text-align: center !important;
+  }
+
+  .dataTables_filter {
+    width: 100% !important;
+    float: left !important;
+    margin-bottom: 20px !important;
+  }
+}
