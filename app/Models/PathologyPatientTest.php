@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class PathologyPatientTest extends Model
 {
     use HasFactory;
+    
+    protected $guarded = ['id'];
+
+    function test()
+    {
+        return $this->belongsTo(Test::class);
+    }
 }

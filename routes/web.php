@@ -123,6 +123,7 @@ Route::group(['middleware'=>['auth']], function() {
         Route::post('/update/{id}',[PathologyPatientController::class, 'update'])->name('update');
         Route::get('/delete/{id}',[PathologyPatientController::class, 'delete'])->name('delete');
         Route::get('/test_find/{id}',[PathologyPatientController::class ,'testFind']);
+        Route::get('/invoice/{id}',[PathologyPatientController::class, 'invoice'])->name('invoice');
     });
     
     Route::group(['prefix' => 'academy/room', 'as' => 'room.'], function () {

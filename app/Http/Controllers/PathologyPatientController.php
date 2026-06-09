@@ -44,8 +44,8 @@ class PathologyPatientController extends Controller
     function store(Request $request)
     {
         $data = $request->all();
-        <!-- $patient = $this->baseService->store($data); -->
-        return $data;
+        $patient = $this->baseService->store($data);
+        return $patient;
     }
     function invoice($id)
     {

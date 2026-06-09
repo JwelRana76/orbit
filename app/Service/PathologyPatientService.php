@@ -36,12 +36,6 @@ class PathologyPatientService {
   {
     $patinets = $this->model::orderBy('id', 'desc')->get();
     return DataTables::of($patinets)
-      ->addColumn('age', function ($item) {
-      $age = $item->age;
-      $age .= ' ';
-      $age .=  $item->age_type == 1 ? 'Days' : ($item->age_type == 2 ? 'Months' : 'Years');
-      return $age;
-      })
       ->addColumn('test', function ($item) {
         $badges = '';
         foreach ($item->tests as $test) {
@@ -49,24 +43,8 @@ class PathologyPatientService {
         }
         return $badges;
       })
-      ->addColumn('tube', function ($item) {
-        $badges = '';
-        foreach ($item->tubes as $tube) {
-          $badges .= '<span class="badge badge-primary">' . ($tube->tube->name ?? 'N/A') . '</span> ';
-        }
-        return $badges;
-      })
-      ->addColumn('paid', function ($item) {
-        return $item->payment()->sum('amount');
-      })
-      ->addColumn('discount', function ($item) {
-        return $item->discount_amount;
-      })
-      ->addColumn('due', function ($item) {
-        return $item->due;
-      })
-      ->addColumn('action', fn ($item) => view('pages.pathology.patient.action', compact('item'))->render())
-      ->rawColumns(['test', 'action', 'tube'])
+      ->addColumn('action', fn ($item) => view('pages.pathology_patient.action', compact('item'))->render())
+      ->rawColumns(['test', 'action'])
       ->make(true);
   }
   function store($data)
@@ -77,25 +55,27 @@ class PathologyPatientService {
       $patient_data['name'] = $data['name'];
       $patient_data['age'] = $data['age'];
       $patient_data['contact'] = $data['contact'];
-      $patient_data['unique_id'] = $this->unique_id();
-      $patient_data['doctor_id'] = $data['doctor_id'];
-      $patient_data['referal_id'] = $data['referal_id'];
-      if ($data['doctor_id'] != null) {
+      // $patient_data['unique_id'] = $this->unique_id();
+      $patient_data['doctor_id'] = $data['doctor'];
+      $patient_data['referal_id'] = $data['referal'];
+      if ($data['doctor'] != null) {
         $patient_data['referal_id'] = null;
       }
-      $patient_data['gender_id'] = $data['gender_id'];
+      $patient_data['visit_date'] = date('Y-m-d');
+      $patient_data['gender_id'] = $data['gender'];
       $patient_data['total'] = $data['sub_total'];
       $patient_data['discount_amount'] = $data['discount_amount'];
       $patient_data['discount_percent'] = $data['discount_percent'];
       $patient_data['grand_total'] = $data['total_payable'];
       $patient_data['paid'] = $data['paid'] ?? 0;
+
       $patient = PathologyPatient::create($patient_data);
 
       $tests = $data['test_id'];
 
       foreach ($tests as $key => $test) {
         $patient_test['test_id'] = $test;
-        $patient_test['pathology_patient_id '] = $patient->id;
+        $patient_test['pathology_patient_id'] = $patient->id;
         PathologyPatientTest::create($patient_test);
       }
 
@@ -104,7 +84,10 @@ class PathologyPatientService {
       return $patient;
     } catch (Exception $e) {
       DB::rollBack();
-      dd($e->getMessage());
+       dd(
+        'Error: '.$e->getMessage(),
+        'Line: '.$e->getLine()
+      );
     }
   }
 

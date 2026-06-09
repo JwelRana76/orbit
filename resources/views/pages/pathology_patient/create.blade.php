@@ -236,8 +236,8 @@
                     dataType: "json",
                     success: function (response) {
                         console.log(response);
-                        // window.open("/patient/invoice/"+response.id,"popup",properties);
-                        // location.reload();
+                        window.open("/pathology/patient/invoice/"+response.id,"popup",properties);
+                        location.reload();
                     },
                     error: function(reject) {
                         var response = $.parseJSON(reject.responseText);

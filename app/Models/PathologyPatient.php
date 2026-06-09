@@ -13,48 +13,43 @@ class PathologyPatient extends Model
 
     public static $columns = [
         ['name' => 'visit_date', 'data' => 'visit_date'],
-        ['name' => 'type', 'data' => 'type'],
         ['name' => 'name', 'data' => 'name'],
         ['name' => 'age', 'data' => 'age'],
         ['name' => 'contact', 'data' => 'contact'],
-        ['name' => 'gender', 'data' => 'gender'],
-        ['name' => 'address', 'data' => 'address'],
+        ['name' => 'test', 'data' => 'test'],
+        ['name' => 'total', 'data' => 'total'],
+        ['name' => 'discount', 'data' => 'discount_amount'],
+        ['name' => 'grand_total', 'data' => 'grand_total'],
         ['name' => 'action', 'data' => 'action'],
     ];
-
-    public function scopeActive($query)
+    function tests()
     {
-        return $query->where('is_active', 1);
+        return $this->hasMany(PathologyPatientTest::class, 'pathology_patient_id', 'id');
     }
-    public function gender()
+    function user()
     {
-        return $this->belongsTo(Gender::class);
+        return $this->belongsTo(User::class);
     }
-    public function religion()
-    {
-        return $this->belongsTo(Religion::class);
-    }
-    public function doctor()
+    function doctor()
     {
         return $this->belongsTo(Doctor::class);
     }
-    public function blood_group()
+    function gender()
     {
-        return $this->belongsTo(BloodGroup::class);
+        return $this->belongsTo(Gender::class);
     }
-    public function documents()
+    function referral()
     {
-        return $this->hasMany(PatientDocument::class);
+        return $this->belongsTo(Doctor::class);
     }
-    public function getAgesAttribute()
+
+    function getMaxdiscountAttribute()
     {
-        if ($this->age_type == 1) {
-            $ex = 'Days';
-        } elseif ($this->age_type == 2) {
-            $ex = 'Months';
-        } else {
-            $ex = 'Years';
+        $data = $this->tests()->get();
+        $max = 0;
+        foreach ($data as $key => $item) {
+            $max += $item->test()->sum('referral_fee_amount');
         }
-        return $this->age . ' ' . $ex;
+        return $max;
     }
 }
