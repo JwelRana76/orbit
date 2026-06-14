@@ -16,7 +16,7 @@ class PathologyPatient extends Model
         ['name' => 'name', 'data' => 'name'],
         ['name' => 'age', 'data' => 'age'],
         ['name' => 'contact', 'data' => 'contact'],
-        ['name' => 'test', 'data' => 'test'],
+        ['name' => 'tests', 'data' => 'test'],
         ['name' => 'total', 'data' => 'total'],
         ['name' => 'discount', 'data' => 'discount_amount'],
         ['name' => 'grand_total', 'data' => 'grand_total'],
