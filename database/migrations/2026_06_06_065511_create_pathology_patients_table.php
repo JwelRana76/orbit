@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('pathology_patients', function (Blueprint $table) {
             $table->id();
             $table->boolean('type')->default(true)->comment('1=new/0=old');
+            $table->string('unique_id');
             $table->string('name');
             $table->string('contact');
             $table->string('age');
@@ -25,11 +26,11 @@ return new class extends Migration
             $table->integer('doctor_id')->nullable();
             $table->integer('referal_id')->nullable();
             $table->date('visit_date');
-            $table->string('total');
-            $table->string('discount_amount');
-            $table->string('discount_percent');
-            $table->string('grand_total');
-            $table->string('paid');
+            $table->double('total');
+            $table->float('discount_amount');
+            $table->float('discount_percent');
+            $table->double('grand_total');
+            $table->double('paid');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });

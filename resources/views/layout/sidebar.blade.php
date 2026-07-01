@@ -40,7 +40,8 @@
         <div id="pathology" class="collapse {{Request::is('pathology*')?'show':''}}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item {{Request::is('pathology/test*')?'active':''}}" href="{{route('test.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Test</a>
-                <a class="collapse-item {{Request::is('pathology/patient*')?'active':''}}" href="{{route('pathology.patient.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Patient</a>
+                <a class="collapse-item {{Request::is('pathology/patient/create')?'active':''}}" href="{{route('pathology.patient.create')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Add Patient</a>
+                <a class="collapse-item {{Request::is('pathology/patient')?'active':''}}" href="{{route('pathology.patient.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Patient</a>
             </div>
         </div>
     </li>

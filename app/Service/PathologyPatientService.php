@@ -19,16 +19,16 @@ class PathologyPatientService {
       $unique_id = $patient->unique_id;
       $ext = explode('-', $unique_id)[1];
       if ($ext < 10) {
-        $unique_id = setting()->invoice_prefix . '-000' . $ext + 1;
+        $unique_id = '000' . $ext + 1;
       } elseif ($ext < 100) {
-        $unique_id = setting()->invoice_prefix . '-00' . $ext + 1;
+        $unique_id = '00' . $ext + 1;
       } elseif ($ext < 1000) {
-        $unique_id = setting()->invoice_prefix . '-0' . $ext + 1;
+        $unique_id = '0' . $ext + 1;
       } else {
-        $unique_id = setting()->invoice_prefix . '-' . $ext + 1;
+        $unique_id = '-' . $ext + 1;
       }
     } else {
-      $unique_id = setting()->invoice_prefix . '-0001';
+      $unique_id = '0001';
     }
     return $unique_id;
   }
@@ -55,7 +55,7 @@ class PathologyPatientService {
       $patient_data['name'] = $data['name'];
       $patient_data['age'] = $data['age'];
       $patient_data['contact'] = $data['contact'];
-      // $patient_data['unique_id'] = $this->unique_id();
+      $patient_data['unique_id'] = $this->unique_id();
       $patient_data['doctor_id'] = $data['doctor'];
       $patient_data['referal_id'] = $data['referal'];
       if ($data['doctor'] != null) {
