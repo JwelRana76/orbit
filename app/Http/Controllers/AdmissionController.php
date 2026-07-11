@@ -2,26 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Test;
+use App\Models\AdmissionPatient;
+use App\Models\Bed;
 use App\Models\Doctor;
 use App\Models\Gender;
-use App\Models\PathologyPatient;
-use App\Models\Religion;
-use App\Service\PathologyPatientService;
+use App\Service\AdmissionService;
 use Illuminate\Http\Request;
 
-class PathologyPatientController extends Controller
+class AdmissionController extends Controller
 {
-     public function __construct()
+    public function __construct()
     {
-        $this->baseService = new PathologyPatientService;
+        $this->baseService = new AdmissionService;
     }
     function index()
     {
         if (!userHasPermission('patient-index'))
         // return view('404');
         $patients = $this->baseService->index();
-        $columns = PathologyPatient::$columns;
+        $columns = AdmissionPatient::$columns;
         if (request()->ajax()) {
             return $patients;
         }
@@ -33,9 +32,9 @@ class PathologyPatientController extends Controller
         if (!userHasPermission('patient-store'))
         // return view('404');
         $gender = Gender::all();
+        $beds = Bed::all();
         $doctors = Doctor::where('is_active', 1)->get();
-        $tests = Test::where('is_active', 1)->get();
-        return view('pages.pathology_patient.create', compact('doctors', 'tests', 'gender'));
+        return view('pages.admission_patient.create', compact('doctors', 'gender','beds'));
     }
     function testFind($id)
     {
@@ -54,24 +53,25 @@ class PathologyPatientController extends Controller
     }
     function edit($id)
     {
-        // if (!userHasPermission('patient-update'))
-        // return view('404');
-        $gender = Gender::all();
+        if (!userHasPermission('patient-update'))
+        return view('404');
+        $genders = Gender::all();
         $doctors = Doctor::where('is_active', 1)->get();
+        $referrals = Doctor::where('is_active', 1)->get();
         $tests = Test::where('is_active', 1)->get();
         $patient = PathologyPatient::findOrFail($id);
-        return view('pages.pathology_patient.edit', compact('patient', 'doctors', 'tests', 'gender'));
+        return view('pages.pathology_patient.edit', compact('patient', 'doctors', 'referrals', 'tests', 'tubes', 'genders'));
     }
-    function update(Request $request,$id)
+    function update(Request $request)
     {
         $data = $request->all();
-        $patient = $this->baseService->update($data,$id);
+        $patient = $this->baseService->update($data);
         return $patient;
     }
     function delete($id)
     {
-        // if (!userHasPermission('patient-delete'))
-        // return view('404');
+        if (!userHasPermission('patient-delete'))
+        return view('404');
         $message = $this->baseService->delete($id);
         return redirect()->route('pathology.patient.index')->with($message);
     }

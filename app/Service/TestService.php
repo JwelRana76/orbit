@@ -29,16 +29,16 @@ class TestService {
     try {
       if ($data['id'] == null) {
         $this->model::create([
-          'name' => strtolower($data['name']),
-          'rate' => strtolower($data['rate']),
-          'max_discount' => strtolower($data['max_discount']),
+          'name' => $data['name'],
+          'rate' => $data['rate'],
+          'max_discount' => $data['max_discount'],
         ]);
         $message = ['success' => 'Test Inserted Successfully'];
       } else {
         $this->model::findOrFail($data['id'])->update([
-          'name' => strtolower($data['name']),
-          'rate' => strtolower($data['rate']),
-          'max_discount' => strtolower($data['max_discount']),
+          'name' => $data['name'],
+          'rate' => $data['rate'],
+          'max_discount' => $data['max_discount'],
         ]);
         $message = ['success' => 'Test Updated Successfully'];
       }

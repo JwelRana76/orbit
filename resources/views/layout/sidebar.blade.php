@@ -46,6 +46,34 @@
         </div>
     </li>
     <li class="nav-item">
+        <a class="nav-link {{Request::is('admission*')?'':'collapsed'}}" href="#" data-toggle="collapse" data-target="#admission"
+            aria-expanded="true" aria-controls="admission">
+            <i class="fas fa-fw fa-home"></i>
+            <span>Admission</span>
+        </a>
+        <div id="admission" class="collapse {{Request::is('admission*')?'show':''}}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item {{Request::is('admission/patient/create')?'active':''}}" href="{{route('admission.patient.create')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Add Patient</a>
+                <a class="collapse-item {{Request::is('admission/patient')?'active':''}}" href="{{route('admission.patient.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Patient</a>
+            </div>
+        </div>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{Request::is('lens*')?'':'collapsed'}}" href="#" data-toggle="collapse" data-target="#lens"
+            aria-expanded="true" aria-controls="lens">
+            <i class="fas fa-fw fa-home"></i>
+            <span>Lens</span>
+        </a>
+        <div id="lens" class="collapse {{Request::is('lens*')?'show':''}}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item {{Request::is('lens/index*')?'active':''}}" href="{{route('lens.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i>Lens List</a>
+                <a class="collapse-item {{Request::is('lens/supplier*')?'active':''}}" href="{{route('lens.supplier.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Supplier</a>
+                <a class="collapse-item {{Request::is('lens/purchase')?'active':''}}" href="{{route('lens.purchase.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Purchase List</a>
+                <a class="collapse-item {{Request::is('lens/purchase/create')?'active':''}}" href="{{route('lens.purchase.create')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Purchase Create</a>
+            </div>
+        </div>
+    </li>
+    <li class="nav-item">
         <a class="nav-link {{Request::is('hrm*')?'':'collapsed'}}" href="#" data-toggle="collapse" data-target="#hrm"
             aria-expanded="true" aria-controls="hrm">
             <i class="fas fa-fw fa-home"></i>
@@ -67,6 +95,7 @@
         <div id="collapsePages" class="collapse {{Request::is('setting*')?'show':''}}" aria-labelledby="headingPages" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item {{Request::is('setting/doctor*')?'active':''}}" href="{{ route('doctor.index') }}"> <i class="fas fa-fw fa-arrow-right mr-2"></i>Doctor</a>
+                <a class="collapse-item {{Request::is('setting/bed*')?'active':''}}" href="{{ route('bed.index') }}"> <i class="fas fa-fw fa-arrow-right mr-2"></i>Bed</a>
                 <a class="collapse-item {{Request::is('setting/division*')?'active':''}}" href="{{ route('division.index') }}"> <i class="fas fa-fw fa-arrow-right mr-2"></i>Division</a>
                 <a class="collapse-item {{Request::is('setting/district*')?'active':''}}" href="{{ route('district.index') }}"> <i class="fas fa-fw fa-arrow-right mr-2"></i>District</a>
                 <a class="collapse-item {{Request::is('setting/upazila*')?'active':''}}" href="{{ route('upazila.index') }}"> <i class="fas fa-fw fa-arrow-right mr-2"></i>Upazila</a>

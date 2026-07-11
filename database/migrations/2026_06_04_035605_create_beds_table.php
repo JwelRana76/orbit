@@ -1,5 +1,6 @@
 <?php
 
+use Dom\Comment;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,12 +12,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pathology_patient_tests', function (Blueprint $table) {
+        Schema::create('beds', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pathology_patient_id')->constrained('pathology_patients')->onDelete('cascade');
-            $table->foreignId('test_id')->constrained('tests')->onDelete('cascade');
-            $table->integer('rate');
-            $table->integer('qty');
+            $table->string('name');
+            $table->boolean('type')->comment("1=Ward/0=Cabin");
+            $table->boolean('status')->comment("1=Bocked/0=Available")->default(false);
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pathology_patient_tests');
+        Schema::dropIfExists('beds');
     }
 };

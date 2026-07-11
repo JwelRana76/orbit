@@ -1,26 +1,27 @@
-<x-admin title="Pathology Patient Create">
+<x-admin title="Pathology Patient Edit">
     {{-- <x-page-header head="Doctor" /> --}}
-    <x-card header="Pathology Patient Create" links="{{ route('pathology.patient.index') }}" title="Patient List">
+    <x-card header="Pathology Patient Edit" links="{{ route('pathology.patient.index') }}" title="Patient List">
         <form id="patient_insert_form">
             <div class="row">
                 <div class="col-md-8">
                     <div class="row">
-                        <x-input id="name" class="col-md-12" required />
-                        <x-input id="contact" class="col-md-4" required />
+                        <x-input type="hidden" id="patient_id" value="{{$patient->id}}" class="col-md-12" required />
+                        <x-input id="name" value="{{$patient->name}}" class="col-md-12" required />
+                        <x-input id="contact" value="{{$patient->contact}}" class="col-md-4" required />
                         <div class="col-md-4">
-                            <x-select id="gender" name="gender_id" :options="$gender" class="col-md-4" required />
+                            <x-select id="gender" selectedId="{{$patient->gender_id}}" name="gender_id" :options="$gender" class="col-md-4" required />
                         </div>
                         <div class=" col-md-4 col-xl-4 col-sm-12">
                             <label for="age">Age</label>
                             <div class="input-group mb-3">
-                            <input type="text" name="age" class="form-control" >
+                            <input type="text" name="age" value="{{$patient->age}}" class="form-control" >
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <x-select id="doctor" name="doctor_id" :options="$doctors" class="col-md-4" />
+                            <x-select id="doctor" name="doctor_id" selectedId="{{$patient->doctor_id}}" :options="$doctors" class="col-md-4" />
                         </div>
                         <div class="col-md-6">
-                            <x-select id="referal" name="referal_id" :options="$doctors" class="col-md-4" />
+                            <x-select id="referal" name="referal_id" selectedId="{{$patient->doctor_id}}"    :options="$doctors" class="col-md-4" />
                         </div>
                         <div class="col-md-12">
                             <x-select id="pathologytest" name="test_id" :options="$tests" key="code" class="col-md-4" />
@@ -39,14 +40,28 @@
                                 </tr>
                             </thead>
                             <tbody id="test_table">
-
+                                @foreach ($patient->tests as $key=>$item)
+                                <tr data-test-id="">
+                                    <td>{{++$key}}</td>
+                                    <td>{{$item->test->name}}</td>
+                                    <td><input type="number" style="width: 100px" name="qty[]" class="form-control quantity" value="{{$item->qty}}" min="1" readonly></td>
+                                    <input type="hidden" name="rate[]" class="rate" value="{{$item->rate}}">
+                                    <input type="hidden" name="test_id[]" value="{{$item->id}}">
+                                    <input type="hidden" name="max_discount[]" class="max_discount" value="{{$item->test->max_discount}}">
+                                    <td>{{$item->rate}}</td>
+                                    <td class="subtotal">{{$item->rate * $item->qty}}</td>
+                                    <input type="hidden" name="subtotal" class="subtotal" value="{{$item->rate * $item->qty}}">
+                                    <input type="hidden" name="discount_amount" class="discount_amount" value="">
+                                    <td><a href="" class=" btn-danger btn-sm delete-tr"><i class="fa fa-fw fa-trash"></i></a></td>
+                                </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <x-small-card header="Calculation Part">
-                        <x-inline-input id="sub_total" />
+                        <x-inline-input id="sub_total" value="{{$patient->total}}" />
                         <input type="hidden" id="max_discount" name="max_discount">
                         <div class="mb-3">
                             <div class="input-group">
@@ -54,19 +69,19 @@
                                     <div class="input-group-text w-100" id="max_discount" style="cursor: pointer">Discount</div>
                                 </div>
                                 <input type="text" class="form-control" max="100" id="discount_percent" name="discount_percent" placeholder="%">
-                                <input type="text" class="form-control" id="discount_amount" name="discount_amount"  placeholder="Amount">
+                                <input type="text" class="form-control" id="discount_amount" value="{{$patient->discount_amount}}" name="discount_amount"  placeholder="Amount">
                             </div>
                         </div>
-                        <x-inline-input id="total_payable" />
+                        <x-inline-input value="{{$patient->grand_total}}" id="total_payable" />
                         <div class="mb-3">
                             <div class="input-group">
                                 <div class="input-group-prepend" style="width: 40%">
                                     <div class="input-group-text w-100" id="paid_text" style="cursor: pointer">Paid</div>
                                 </div>
-                                <input type="text" class="form-control" id="paid" name="paid"  placeholder="Paid Amount">
+                                <input type="text" class="form-control" id="paid" value="{{$patient->paid}}" name="paid"  placeholder="Paid Amount">
                             </div>
                         </div>
-                        <x-inline-input id="due" />
+                        <x-inline-input id="due" value="{{$patient->grand_total - $patient->paid}}" />
                     </x-small-card>
                     <button onclick="PatientCreate()" id="btnSubmit" type="button" class="btn btn-sm btn-primary mt-3  save-btn" target="_blank"><i
                                                         class="fa fa-save"></i>
@@ -231,7 +246,7 @@
                 var data = $('#patient_insert_form').serialize();
                 $.ajax({
                     type: "POST",
-                    url: "{{ route('pathology.patient.store') }}",
+                    url: "{{ route('pathology.patient.update',1) }}",
                     data: data,
                     dataType: "json",
                     success: function (response) {

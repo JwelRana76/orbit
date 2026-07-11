@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AdmissionController;
+use App\Http\Controllers\BedController;
 use App\Http\Controllers\BloodGroupController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UsersController;
@@ -13,6 +15,9 @@ use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\GenderController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\LensController;
+use App\Http\Controllers\LensPurchaseController;
+use App\Http\Controllers\LensSupplierController;
 use App\Http\Controllers\PathologyPatientController;
 use App\Http\Controllers\ReligionController;
 use App\Http\Controllers\RoomController;
@@ -108,6 +113,12 @@ Route::group(['middleware'=>['auth']], function() {
         Route::get('/edit/{id}',[GenderController::class, 'edit'])->name('edit');
         Route::get('/delete/{id}',[GenderController::class, 'delete'])->name('delete');
     });
+    Route::group(['prefix' => 'setting/bed', 'as' => 'bed.'], function () {
+        Route::get('/',[BedController::class, 'index'])->name('index');
+        Route::post('/store',[BedController::class, 'store'])->name('store');
+        Route::get('/edit/{id}',[BedController::class, 'edit'])->name('edit');
+        Route::get('/delete/{id}',[BedController::class, 'delete'])->name('delete');
+    });
     // Academic section route start
     Route::group(['prefix' => 'pathology/test', 'as' => 'test.'], function () {
         Route::get('/',[TestController::class,'index'])->name('index');
@@ -125,7 +136,44 @@ Route::group(['middleware'=>['auth']], function() {
         Route::get('/test_find/{id}',[PathologyPatientController::class ,'testFind']);
         Route::get('/invoice/{id}',[PathologyPatientController::class, 'invoice'])->name('invoice');
     });
-    
+
+    // Lens router section started 
+    Route::group(['prefix' => 'lens/index', 'as' => 'lens.'], function () {
+        Route::get('/',[LensController::class,'index'])->name('index');
+        Route::post('/store',[LensController::class,'store'])->name('store');
+        Route::get('/edit/{id}',[LensController::class, 'edit'])->name('edit');
+        Route::get('/delete/{id}',[LensController::class, 'delete'])->name('delete');
+    });
+    Route::group(['prefix' => 'lens/supplier', 'as' => 'lens.supplier.'], function () {
+        Route::get('/',[LensSupplierController::class,'index'])->name('index');
+        Route::post('/store',[LensSupplierController::class,'store'])->name('store');
+        Route::get('/edit/{id}',[LensSupplierController::class, 'edit'])->name('edit');
+        Route::get('/delete/{id}',[LensSupplierController::class, 'delete'])->name('delete');
+    });
+    Route::group(['prefix' => 'lens/purchase', 'as' => 'lens.purchase.'], function () {
+        Route::get('/',[LensPurchaseController::class, 'index'])->name('index');
+        Route::get('/create',[LensPurchaseController::class, 'create'])->name('create');
+        Route::post('/store',[LensPurchaseController::class, 'store'])->name('store');
+        Route::get('/edit/{id}',[LensPurchaseController::class, 'edit'])->name('edit');
+        Route::post('/update/{id}',[LensPurchaseController::class, 'update'])->name('update');
+        Route::get('/delete/{id}',[LensPurchaseController::class, 'delete'])->name('delete');
+        Route::get('/find_lens/{id}',[LensPurchaseController::class, 'lensFind']);
+        Route::get('/invoice/{id}',[LensPurchaseController::class, 'invoice'])->name('invoice');
+        Route::post('payment',[LensPurchaseController::class,'payment'])->name('payment');
+    });
+
+    // Admission patient route sections
+     Route::group(['prefix' => 'admission/patient', 'as' => 'admission.patient.'], function () {
+        Route::get('/',[AdmissionController::class, 'index'])->name('index');
+        Route::get('/create',[AdmissionController::class, 'create'])->name('create');
+        Route::post('/store',[AdmissionController::class, 'store'])->name('store');
+        Route::get('/edit/{id}',[AdmissionController::class, 'edit'])->name('edit');
+        Route::post('/update/{id}',[AdmissionController::class, 'update'])->name('update');
+        Route::get('/delete/{id}',[AdmissionController::class, 'delete'])->name('delete');
+        Route::get('/test_find/{id}',[AdmissionController::class ,'testFind']);
+        Route::get('/invoice/{id}',[AdmissionController::class, 'invoice'])->name('invoice');
+    });
+
     Route::group(['prefix' => 'academy/room', 'as' => 'room.'], function () {
         Route::get('/',[RoomController::class, 'index'])->name('index');
         Route::post('/store',[RoomController::class, 'store'])->name('store');

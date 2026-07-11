@@ -27,8 +27,8 @@ return new class extends Migration
             $table->integer('referal_id')->nullable();
             $table->date('visit_date');
             $table->double('total');
-            $table->float('discount_amount');
-            $table->float('discount_percent');
+            $table->float('discount_amount')->nullable();
+            $table->float('discount_percent')->nullable();
             $table->double('grand_total');
             $table->double('paid');
             $table->boolean('is_active')->default(true);

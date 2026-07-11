@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pathology_patient_tests', function (Blueprint $table) {
+        Schema::create('lens_suppliers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pathology_patient_id')->constrained('pathology_patients')->onDelete('cascade');
-            $table->foreignId('test_id')->constrained('tests')->onDelete('cascade');
-            $table->integer('rate');
-            $table->integer('qty');
+            $table->string('name');
+            $table->string('contact');
+            $table->text('address');
+            $table->boolean('status')->comment("1=Active/0=Deactive")->default(true);
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pathology_patient_tests');
+        Schema::dropIfExists('lens_suppliers');
     }
 };
