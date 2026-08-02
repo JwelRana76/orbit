@@ -6,8 +6,9 @@
                 <x-form method="post" action="{{ route('lens.store') }}">
                     <x-input id="id" type="hidden" value="{{ $bed->id ?? null }}" />
                     <x-input id="name" value="{{ $bed->name ?? old('name') }}" />
+                    <x-input id="power" value="{{ $bed->power ?? old('power') }}" />
                     <x-input id="constant" value="{{ $bed->constant ?? old('constant') }}" />
-                    <x-input id="cost" value="{{ $bed->cost ?? old('constant') }}" />
+                    <x-input id="cost" value="{{ $bed->cost ?? old('cost') }}" />
                     <x-input id="price" value="{{ $bed->price ?? old('price') }}" />
                     <div class="form-check">
                         <input

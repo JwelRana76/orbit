@@ -1,6 +1,7 @@
 <x-admin title="Lens Purchase">
     <x-page-header head="Lens Purchase" />
     <div class="row">
+      
         <div class="col-md-12">
             <x-data-table dataUrl="/lens/purchase" id="lens_purchases" :columns="$columns" />
         </div>

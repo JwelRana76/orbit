@@ -13,21 +13,29 @@ return new class extends Migration
     {
         Schema::create('admission_patients', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->string('reg_no');
             $table->string('name');
             $table->string('age');
             $table->string('contact');
             $table->string('guardian');
-            $table->string('address');
-            $table->string('surgone');
-            $table->float('admission_fee');
-            $table->boolean('bade_type')->comment('1=ward/0=cabin/null=no bade')->nullable();
-            $table->float('bade_no');
-            $table->float('bade_fee');
-            $table->string('ot_type');
-            $table->float('ot_fee');
-            $table->string('lens');
-            $table->float('lens_fee');
-            $table->double('total');
+            $table->string('present_address');
+            $table->string('permanent_address');
+            $table->string('relative');
+            $table->string('relative_address');
+            $table->foreignId('doctor_id')->constrained('doctors')->onDelete('cascade');
+            $table->foreignId('gender_id')->constrained('genders')->onDelete('cascade');
+            $table->float('admission_fee')->nullable();
+            $table->boolean('bed_type')->comment('1=ward/0=cabin/null=no bade')->nullable();
+            $table->foreignId('bed_id')->constrained('beds')->onDelete('cascade');
+            $table->float('bed_fee')->nullable();
+            $table->foreignId('operation_id')->constrained('operations')->onDelete('cascade');
+            $table->float('ot_fee')->nullable();
+            $table->string('lens_id')->nullable();
+            $table->float('lens_fee')->nullable();
+            $table->boolean('payment_status')->comment('1=paid/0=due')->default(false);
+            $table->boolean('status')->comment('1=admitted /0=release/null=Cancel')->default(true)->nullable();
+            $table->dateTime('released')->nullable();
             $table->timestamps();
         });
     }

@@ -11,7 +11,12 @@
                             <x-select id="supplier" :options="$supplier" required />
                         </div>
                         <div class="col-md-12">
-                            <x-select id="lens" :options="$lens" key="code" />
+                            <label for="lens">Select Lens</label>
+                            <select name="lens" id="lens" data-live-search="true" title="Select Lens" class="form-control selectpicker">
+                                @foreach ($lens as $key=>$item)
+                                    <option value="{{$item->id}}">{{$item->name}} [{{$item->power}}]</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                     <div class="row mt-3 mb-5">
@@ -87,7 +92,7 @@
                             $('#test_table').append(`
                                 <tr data-test-id="${selectedValue}">
                                     <td>${rowCount}</td>
-                                    <td>${data.name}</td>
+                                    <td>${data.name} [${data.power}]</td>
                                     <td><input type="number" id="increment_subtotal" name="qty[]" class="form-control quantity" value="1" min="1"></td>
                                     <input type="hidden" name="cost[]" class="cost" value="${data.cost}">
                                     <input type="hidden" name="lens_id[]" class="cost" value="${data.id}">

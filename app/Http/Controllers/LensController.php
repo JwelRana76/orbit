@@ -19,6 +19,9 @@ class LensController extends Controller
             $data = $this->model::where('status',true)->get();
 
             return DataTables::of($data)
+            ->addColumn('stock', function ($item) {
+                return $item->stock;
+            })
             ->addColumn('action', fn($item) => view('pages.lens.action', compact('item'))->render())
             ->make(true);
         }
@@ -36,6 +39,7 @@ class LensController extends Controller
         DB::beginTransaction();
         try {
             $lens['name'] = $data['name'];
+            $lens['power'] = $data['power'];
             $lens['constant'] = $data['constant'];
             $lens['cost'] = $data['cost'];
             $lens['price'] = $data['price'];
@@ -62,8 +66,11 @@ class LensController extends Controller
         $columns = $this->model::$columns;
         if (request()->ajax()) {
             $data = $this->model::where('status',true)->get();
-
+    
             return DataTables::of($data)
+            ->addColumn('stock', function ($item) {
+                return $item->stock;
+            })
             ->addColumn('action', fn($item) => view('pages.lens.action', compact('item'))->render())
             ->make(true);
         }

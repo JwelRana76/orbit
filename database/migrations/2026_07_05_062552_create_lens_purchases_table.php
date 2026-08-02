@@ -21,7 +21,7 @@ return new class extends Migration
             $table->double('shipping_cost');
             $table->double('discount');
             $table->double('grand_total');
-            $table->double('paid_amount');
+            $table->double('paid_amount')->nullable();
             $table->text('note')->nullable();
             $table->timestamps();
         });

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('lenses', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('power');
             $table->string('constant');
             $table->float('cost')->nullable();
             $table->float('price');

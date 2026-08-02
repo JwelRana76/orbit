@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('pathology_patients', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->boolean('type')->default(true)->comment('1=new/0=old');
             $table->string('unique_id');
             $table->string('name');

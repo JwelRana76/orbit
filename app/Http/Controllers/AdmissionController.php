@@ -6,6 +6,8 @@ use App\Models\AdmissionPatient;
 use App\Models\Bed;
 use App\Models\Doctor;
 use App\Models\Gender;
+use App\Models\Lens;
+use App\Models\Operation;
 use App\Service\AdmissionService;
 use Illuminate\Http\Request;
 
@@ -24,7 +26,7 @@ class AdmissionController extends Controller
         if (request()->ajax()) {
             return $patients;
         }
-        return view('pages.pathology_patient.index', compact('columns'));
+        return view('pages.admission_patient.index', compact('columns'));
     }
 
     function create()
@@ -32,41 +34,56 @@ class AdmissionController extends Controller
         if (!userHasPermission('patient-store'))
         // return view('404');
         $gender = Gender::all();
-        $beds = Bed::all();
+        $beds = Bed::where('status',false)->get();
+        $lens = Lens::where('status',true)->get();
+        $operation = Operation::where('status',true)->get();
         $doctors = Doctor::where('is_active', 1)->get();
-        return view('pages.admission_patient.create', compact('doctors', 'gender','beds'));
-    }
-    function testFind($id)
-    {
-        return Test::where('id', $id)->first();
+        return view('pages.admission_patient.create', compact('doctors', 'gender','beds','lens','operation'));
     }
     function store(Request $request)
     {
         $data = $request->all();
         $patient = $this->baseService->store($data);
+        return redirect()->route('admission.patient.index')->with('success','Admission Completed');
+    }
+    function find_patient($id)
+    {
+        $patient = AdmissionPatient::select('ot_fee', 'bed_fee', 'lens_fee', 'admission_fee')
+                ->findOrFail($id);
         return $patient;
     }
-    function invoice($id)
-    {
-        $patient = PathologyPatient::findOrFail($id);
-        return view('pages.pathology_patient.invoice', compact('patient'));
+    function payment(Request $request){
+        $data = array_filter(
+            $request->except('patient_id'),
+            fn ($value) => !is_null($value)
+        );
+        $patient = AdmissionPatient::findOrFail($request->patient_id);
+        $patient->update($data);
+        return back()->with('success','Patient Payment Completed');
+    }
+    function cancel(Request $request){
+        $data = $request->except('patient_id');
+        $data['status'] = null;
+        $patient = AdmissionPatient::findOrFail($request->patient_id);
+        $patient->update($data);
+        Bed::findOrFail($patient->bed_id)->update(['status'=> false]);
+        return back()->with('success','Patient Cancel Completed');
     }
     function edit($id)
     {
-        if (!userHasPermission('patient-update'))
-        return view('404');
-        $genders = Gender::all();
+        $patient = AdmissionPatient::findOrFail($id);
+        $gender = Gender::all();
+        $beds = Bed::where('status',false)->orwhere('id',$patient->bed_id)->get();;
+        $lens = Lens::where('status',true)->get();
+        $operation = Operation::where('status',true)->get();
         $doctors = Doctor::where('is_active', 1)->get();
-        $referrals = Doctor::where('is_active', 1)->get();
-        $tests = Test::where('is_active', 1)->get();
-        $patient = PathologyPatient::findOrFail($id);
-        return view('pages.pathology_patient.edit', compact('patient', 'doctors', 'referrals', 'tests', 'tubes', 'genders'));
+        return view('pages.admission_patient.edit', compact('patient', 'doctors', 'gender','lens','beds','operation'));
     }
-    function update(Request $request)
+    function update(Request $request,$id)
     {
         $data = $request->all();
-        $patient = $this->baseService->update($data);
-        return $patient;
+        $patient = $this->baseService->update($data,$id);
+        return redirect()->route('admission.patient.index')->with('success','Admission Update Completed');
     }
     function delete($id)
     {
@@ -74,5 +91,14 @@ class AdmissionController extends Controller
         return view('404');
         $message = $this->baseService->delete($id);
         return redirect()->route('pathology.patient.index')->with($message);
+    }
+    function release($id){
+        $patient = AdmissionPatient::findOrFail($id);
+        $patient->update([
+            'status' => false,
+            'released' => now(),
+        ]);
+        $bed = Bed::findOrFail($patient->bed_id)->update(['status' => false]);
+        return back()->with('success','Patient Released Successfully');
     }
 }

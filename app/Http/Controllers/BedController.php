@@ -48,13 +48,13 @@ class BedController extends Controller
         try {
         if ($data['id'] == null) {
             $this->model::create([
-            'name' => strtolower($data['name']),
+            'name' => $data['name'],
             'type' => $data['type'],
             ]);
             $message = ['success' => 'Bed Inserted Successfully'];
         } else {
             $this->model::findOrFail($data['id'])->update([
-            'name' => strtolower($data['name']),
+            'name' => $data['name'],
             'type' => $data['type'],
             ]);
             $message = ['success' => 'Bed Updated Successfully'];

@@ -17,7 +17,7 @@ class PathologyPatientService {
     $patient = PathologyPatient::orderBy('id', 'desc')->first();
     if ($patient) {
       $unique_id = $patient->unique_id;
-      $ext = explode('-', $unique_id)[1];
+      $ext = explode('-', $unique_id)[0];
       if ($ext < 10) {
         $unique_id = '000' . $ext + 1;
       } elseif ($ext < 100) {

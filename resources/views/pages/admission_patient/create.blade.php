@@ -1,33 +1,34 @@
 <x-admin title="Admission Patient Create">
     {{-- <x-page-header head="Doctor" /> --}}
     <x-card header="Admission Patient Create" links="{{ route('admission.patient.index') }}" title="Patient List">
-        <form id="patient_insert_form">
+        <x-form method="post" action="{{ route('admission.patient.store') }}">
             <div class="row">
                 <div class="col-md-12">
                     <div class="row">
+                        <h5 class="col-md-12">Patient Details</h5>
                         <x-input id="name" class="col-md-3" required />
                         <x-input id="age" class="col-md-3" required />
                         <x-input id="contact" class="col-md-3" required />
+                        <div class="mb-3 col-md-3">
+                            <label for="">Father / Husband</label>
+                            <input type="text" class="form-control" id="guardian" name="guardian" >
+                        </div>
+                        <x-input id="present_address" class="col-md-3" required />
+                        <div class="mb-3 col-md-3">
+                            <label for="">
+                                <input type="checkbox" class="btn-check mr-3" name="permanent_same" id="btncheck1" autocomplete="off">
+                                Permanent Address</label>
+                            <input type="text" class="form-control" id="permanent_address" name="permanent_address" >
+                        </div>
+                        <x-input id="relative" class="col-md-3"  />
+                        <div class="mb-3 col-md-3">
+                            <label for="">
+                                <input type="checkbox" class="btn-check mr-3" name="relative_same" id="btncheck1" autocomplete="off">
+                                Relative Address</label>
+                            <input type="text" class="form-control" id="relative_address" name="relative_address" >
+                        </div>
                         <div class="col-md-3">
                             <x-select id="gender" name="gender_id" :options="$gender" required />
-                        </div>
-                        <div class="col-md-3">
-                            <x-select id="surgone" name="doctor_id" required :options="$doctors" class="col-md-4" />
-                        </div>
-                        <x-input id="admission_fee" class="col-md-3" required />
-                        <div class="col-md-3">
-                            <label for="ot_type">Operation *</label>
-                            <select name="ot_type" required id="ot_type" class="form-control selectpicker" data-live-search="true" title="Select OT Type">
-                                <option value="sics">Cataract SICS</option>
-                                <option value="phaco">Cataract Phaco</option>
-                                <option value="chalazion">Chalazion</option>
-                                <option value="dcr">DCR</option>
-                                <option value="dct">DCT</option>
-                                <option value="pterygium">Pterygium</option>
-                                <option value="abscess_drain ">Abscess Drain </option>
-                                <option value="evisceration ">Evisceration</option>
-                                <option value=" yag_laser ">Yag Laser</option>
-                            </select>
                         </div>
                         <div class="col-md-3">
                             <label for="bed_type">Bed Type</label>
@@ -39,11 +40,27 @@
                         <div class="col-md-3">
                             <x-select id="bed" name="bed" :options="$beds" class="col-md-4" />
                         </div>
+                        <h5 class="col-md-12 mt-3">Operation Details</h5>
+                        <div class="col-md-3">
+                            <x-select id="surgone" name="doctor_id" required :options="$doctors" class="col-md-4" />
+                        </div>
+                        <div class="col-md-3">
+                            <x-select id="operation" name="bed" :options="$operation" class="col-md-4" />
+                        </div>
+                        <div class="col-md-3">
+                            <x-select id="lens" :options="$lens" />
+                        </div>
+                        <h5 class="col-md-12 mt-3">Amount Section</h5>
+                        <x-input id="admission_fee" class="col-md-3" />
+                        <div class="mb-3 col-md-3">
+                            <label for="">Ward / Cabin Fee</label>
+                            <input type="text" class="form-control" id="ward_cabin" name="ward_cabin" >
+                        </div>
                     </div>
+                    <x-button value="Save" />
                 </div>
             </div>
-            
-        </form>
+        </x-form>
     </x-card>
 
     @push('js')

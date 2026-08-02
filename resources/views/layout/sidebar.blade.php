@@ -6,8 +6,9 @@
         <div class="sidebar-brand-icon">
             @if (setting()->logo)
                 <img src="/upload/{{ setting()->logo }}" alt="" width="80px">    
-            @endif
+            @else
             <img src="/upload/default.png" alt="" width="80px">
+            @endif
         </div>
         <div class="sidebar-brand-text">{{ setting()->name_short }}</div>
     </a>
@@ -70,6 +71,26 @@
                 <a class="collapse-item {{Request::is('lens/supplier*')?'active':''}}" href="{{route('lens.supplier.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Supplier</a>
                 <a class="collapse-item {{Request::is('lens/purchase')?'active':''}}" href="{{route('lens.purchase.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Purchase List</a>
                 <a class="collapse-item {{Request::is('lens/purchase/create')?'active':''}}" href="{{route('lens.purchase.create')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Purchase Create</a>
+                <a class="collapse-item {{Request::is('lens/provider/index')?'active':''}}" href="{{route('lens.provider.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Vendor Provide</a>
+            </div>
+        </div>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{Request::is('pharmacy*')?'':'collapsed'}}" href="#" data-toggle="collapse" data-target="#pharmacy"
+            aria-expanded="true" aria-controls="pharmacy">
+            <i class="fas fa-fw fa-home"></i>
+            <span>Pharmacy</span>
+        </a>
+        <div id="pharmacy" class="collapse {{Request::is('pharmacy*')?'show':''}}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item {{Request::is('pharmacy/medicine')?'active':''}}" href="{{route('medicine.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Medicine</a>
+                <a class="collapse-item {{Request::is('pharmacy/medicine/supplier')?'active':''}}" href="{{route('medicine.supplier.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Supplier</a>
+                <a class="collapse-item {{Request::is('pharmacy/medicine/purchase')?'active':''}}" href="{{route('medicine.purchase.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Purchase</a>
+                <a class="collapse-item {{Request::is('pharmacy/medicine/customer')?'active':''}}" href="{{route('medicine.customer.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Customer</a>
+                <a class="collapse-item {{Request::is('pharmacy/medicine/sale')?'active':''}}" href="{{route('medicine.sale.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Sale List</a>
+                <a class="collapse-item {{Request::is('pharmacy/medicine/sale/create')?'active':''}}" href="{{route('medicine.sale.create')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Sale Create</a>
+                <a class="collapse-item {{Request::is('pharmacy/glass')?'active':''}}" href="{{route('glass.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Glass</a>
+                <a class="collapse-item {{Request::is('pharmacy/frame')?'active':''}}" href="{{route('frame.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Frame</a>
             </div>
         </div>
     </li>
@@ -96,6 +117,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item {{Request::is('setting/doctor*')?'active':''}}" href="{{ route('doctor.index') }}"> <i class="fas fa-fw fa-arrow-right mr-2"></i>Doctor</a>
                 <a class="collapse-item {{Request::is('setting/bed*')?'active':''}}" href="{{ route('bed.index') }}"> <i class="fas fa-fw fa-arrow-right mr-2"></i>Bed</a>
+                <a class="collapse-item {{Request::is('setting/operation*')?'active':''}}" href="{{ route('ot.index') }}"> <i class="fas fa-fw fa-arrow-right mr-2"></i>Operation</a>
                 <a class="collapse-item {{Request::is('setting/division*')?'active':''}}" href="{{ route('division.index') }}"> <i class="fas fa-fw fa-arrow-right mr-2"></i>Division</a>
                 <a class="collapse-item {{Request::is('setting/district*')?'active':''}}" href="{{ route('district.index') }}"> <i class="fas fa-fw fa-arrow-right mr-2"></i>District</a>
                 <a class="collapse-item {{Request::is('setting/upazila*')?'active':''}}" href="{{ route('upazila.index') }}"> <i class="fas fa-fw fa-arrow-right mr-2"></i>Upazila</a>

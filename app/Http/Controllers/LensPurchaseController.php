@@ -30,7 +30,7 @@ class LensPurchaseController extends Controller
     }
     public function create(){
         $supplier = LensSupplier::where('status',true)->get();
-        $lens = Lens::where('status',true)->get();
+        $lens = Lens::where('status',true)->where('is_hospital_provider',true)->get();
         return view('pages.lens_purchase.create',compact('supplier','lens'));
     }
     public function lensFind($id){
@@ -51,7 +51,7 @@ class LensPurchaseController extends Controller
     {   $id = base64_decode($id);
         $supplier = LensSupplier::where('status',true)->get();
         $purchase = LensPurchase::findOrFail($id);
-        $lens = Lens::where('status',true)->get();
+        $lens = Lens::where('status',true)->where('is_hospital_provider',true)->get();
         return view('pages.lens_purchase.edit', compact('purchase','supplier','lens'));
     }
     

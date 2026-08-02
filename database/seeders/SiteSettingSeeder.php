@@ -23,21 +23,19 @@ class SiteSettingSeeder extends Seeder
             'name_short' => 'DHMS',
             'address' => 'Jashore Sadar, Jashore',
             'contact' => '01571-166570',
+            'email' => 'jwelranajr8676@gmail.com',
         ]);
-        Classes::create([
-            'name' => "six"
-        ]);
-        Gender::create([
-            'name' => "Male"
-        ]);
+        $gender = ['Male','Female','Other'];
+        for($i=0;$i<count($gender);$i++){
+            Gender::create(['name' => $gender[$i]]);
+        }
         BloodGroup::create([
             'name' => "A+"
         ]);
-        Session::create([
-            'name' => "2026"
-        ]);
+        $religion = ['Islam','Hindu','Kristan','Other'];
+        for($i=0;$i<count($religion);$i++){
         Religion::create([
-            'name' => "Islam"
-        ]);
+            'name' => $religion[$i]]);
+        }
     }
 }

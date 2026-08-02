@@ -8,6 +8,8 @@
             <x-input id="name_short" value="{{ $setting->name_short }}" />
             <x-input id="address" value="{{ $setting->address }}" />
             <x-input id="contact" value="{{ $setting->contact }}" />
+            <x-input id="email" value="{{ $setting->email }}" />
+            <x-input id="facebook" value="{{ $setting->facebook }}" />
             <x-input type="file" id="logo" />
             @if ($setting->logo)
             <div class="row">

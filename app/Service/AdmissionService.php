@@ -2,26 +2,23 @@
 
 namespace App\Service;
 
+use App\Models\AdmissionPatient;
+use App\Models\Bed;
+use Exception;
+use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\DataTables;
+
 class AdmissionService {
-    protected $model = PathologyPatient::class;
+    protected $model = AdmissionPatient::class;
 
   function unique_id()
   {
-    $patient = PathologyPatient::orderBy('id', 'desc')->first();
+    $patient = $this->model::latest('id')->first();
+
     if ($patient) {
-      $unique_id = $patient->unique_id;
-      $ext = explode('-', $unique_id)[1];
-      if ($ext < 10) {
-        $unique_id = '000' . $ext + 1;
-      } elseif ($ext < 100) {
-        $unique_id = '00' . $ext + 1;
-      } elseif ($ext < 1000) {
-        $unique_id = '0' . $ext + 1;
-      } else {
-        $unique_id = '-' . $ext + 1;
-      }
+        $unique_id = date('m') . '/' . date('Y') . '/' . ($patient->id + 1);
     } else {
-      $unique_id = '0001';
+        $unique_id = date('m') . '/' . date('Y') . '/1';
     }
     return $unique_id;
   }
@@ -29,49 +26,68 @@ class AdmissionService {
   {
     $patinets = $this->model::orderBy('id', 'desc')->get();
     return DataTables::of($patinets)
-      ->addColumn('test', function ($item) {
-        $badges = '';
-        foreach ($item->tests as $test) {
-          $badges .= '<span class="badge badge-primary">' . ($test->test->name ?? 'N/A') . '</span> ';
-        }
-        return $badges;
+      ->addColumn('date', function ($item) {
+        return $item->created_at->format('d-M-Y');
       })
-      ->addColumn('action', fn ($item) => view('pages.pathology_patient.action', compact('item'))->render())
-      ->rawColumns(['test', 'action'])
+      ->addColumn('surgone', function ($item) {
+        return $item->doctor->name;
+      })
+      ->addColumn('lens', function ($item) {
+        return $item->lens->name ?? null;
+      })
+      ->addColumn('bed', function ($item) {
+        return $item->bed->name ?? null;
+      })
+      ->addColumn('ot', function ($item) {
+        return $item->operation->name;
+      })
+      ->addColumn('status', function ($item) {
+        return match ($item->status) {
+            0 => '<span class="badge bg-primary text-light">Released</span>',
+            1 => '<span class="badge bg-success text-light">Admitted</span>',
+            default => '<span class="badge bg-danger text-light">Cancelled</span>',
+        };
+      })
+      ->addColumn('action', fn ($item) => view('pages.admission_patient.action', compact('item'))->render())
+      ->rawColumns(['action','status'])
       ->make(true);
   }
   function store($data)
   {
     DB::beginTransaction();
     try {
+      // dd($data);
       $patient_data['user_id'] = auth()->user()->id;
       $patient_data['name'] = $data['name'];
       $patient_data['age'] = $data['age'];
       $patient_data['contact'] = $data['contact'];
-      $patient_data['unique_id'] = $this->unique_id();
-      $patient_data['doctor_id'] = $data['doctor'];
-      $patient_data['referal_id'] = $data['referal'];
-      if ($data['doctor'] != null) {
-        $patient_data['referal_id'] = null;
+      $patient_data['reg_no'] = $this->unique_id();
+      $patient_data['doctor_id'] = $data['surgone'];
+      $patient_data['present_address'] = $data['present_address'];
+      $patient_data['permanent_address'] = $data['permanent_address'];
+      $patient_data['relative_address'] = $data['relative_address'];
+      if (isset($data['permanent_same'])) {
+        $patient_data['permanent_address'] = $data['present_address'];
       }
-      $patient_data['visit_date'] = date('Y-m-d');
+      if (isset($data['relative_same'])) {
+        $patient_data['ralative_address'] = $data['present_address'];
+      }
+      $patient_data['guardian'] = $data['guardian'];
+      $patient_data['relative'] = $data['relative'];
       $patient_data['gender_id'] = $data['gender'];
-      $patient_data['total'] = $data['sub_total'];
-      $patient_data['discount_amount'] = $data['discount_amount'];
-      $patient_data['discount_percent'] = $data['discount_percent'];
-      $patient_data['grand_total'] = $data['total_payable'];
-      $patient_data['paid'] = $data['paid'] ?? 0;
+      $patient_data['bed_type'] = $data['bed_type'];
+      $patient_data['bed_id'] = $data['bed'];
+      $patient_data['operation_id'] = $data['operation'];
+      $patient_data['lens_id'] = $data['lens'];
+      $patient_data['admission_fee'] = $data['admission_fee'];
+      $patient_data['bed_fee'] = $data['ward_cabin'];
 
-      $patient = PathologyPatient::create($patient_data);
+      $patient = $this->model::create($patient_data);
 
-      $tests = $data['test_id'];
-
-      foreach ($tests as $key => $test) {
-        $patient_test['test_id'] = $test;
-        $patient_test['pathology_patient_id'] = $patient->id;
-        PathologyPatientTest::create($patient_test);
+      $bed = Bed::findOrFail($data['bed']);
+      if($bed->type == false){
+        $bed->update(['status'=>true]);
       }
-
 
       DB::commit();
       return $patient;
@@ -84,46 +100,41 @@ class AdmissionService {
     }
   }
 
-  function update($data)
+  function update($data,$id)
   {
     DB::beginTransaction();
     try {
+      $patient = $this->model::findOrFail($id);
+      $patient_data['user_id'] = auth()->user()->id;
       $patient_data['name'] = $data['name'];
       $patient_data['age'] = $data['age'];
       $patient_data['contact'] = $data['contact'];
-      $patient_data['age_type'] = $data['age_type'];
-      $patient_data['doctor_id'] = $data['doctor_id'];
-      $patient_data['referral_id'] = $data['referral_id'];
-      if ($data['doctor_id'] != null) {
-        $patient_data['referral_id'] = null;
+      $patient_data['doctor_id'] = $data['surgone'];
+      $patient_data['present_address'] = $data['present_address'];
+      $patient_data['permanent_address'] = $data['permanent_address'];
+      $patient_data['relative_address'] = $data['relative_address'];
+      if (isset($data['permanent_same'])) {
+        $patient_data['permanent_address'] = $data['present_address'];
       }
-      $patient_data['gender_id'] = $data['gender_id'];
-      $patient_data['total'] = $data['sub_total'];
-      $patient_data['discount_amount'] = $data['discount_amount'];
-      $patient_data['discount_percent'] = $data['discount_percent'];
-      $patient_data['grand_total'] = $data['total_payable'];
-      $patient_data['paid'] = $data['paid'];
-
-      $patient = PathologyPatient::findOrFail($data['patient_id']);
+      if (isset($data['relative_same'])) {
+        $patient_data['relative_address'] = $data['present_address'];
+      }
+      $patient_data['guardian'] = $data['guardian'];
+      $patient_data['relative'] = $data['relative'];
+      $patient_data['gender_id'] = $data['gender'];
+      $patient_data['bed_type'] = $data['bed_type'];
+      $patient_data['bed_id'] = $data['bed'];
+      $patient_data['operation_id'] = $data['operation'];
+      $patient_data['lens_id'] = $data['lens'];
+      $patient_data['admission_fee'] = $data['admission_fee'];
+      $patient_data['bed_fee'] = $data['ward_cabin'];
+    
       $patient->update($patient_data);
 
-      $tests = $data['test_id'];
-
-      PathologyPatientTest::where('patient_id', $patient->id)->delete();
-
-      foreach ($tests as $key => $test) {
-        $patient_test['test_id'] = $test;
-        $patient_test['patient_id'] = $patient->id;
-        PathologyPatientTest::create($patient_test);
+      $bed = Bed::findOrFail($data['bed']);
+      if($bed->type == false){
+        $bed->update(['status'=>true]);
       }
-      
-      PathologyPayment::where('patient_id', $patient->id)->delete();
-
-      $payment = new PathologyPayment([
-        'amount' => $patient->paid,
-      ]);
-
-      $patient->payment()->save($payment);
       DB::commit();
       return $patient;
     } catch (Exception $e) {

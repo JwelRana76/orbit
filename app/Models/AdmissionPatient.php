@@ -15,12 +15,12 @@ class AdmissionPatient extends Model
         ['name' => 'date', 'data' => 'date'],
         ['name' => 'name', 'data' => 'name'],
         ['name' => 'age', 'data' => 'age'],
-        ['name' => 'surgone', 'data' => 'surgone'],
         ['name' => 'contact', 'data' => 'contact'],
+        ['name' => 'surgone', 'data' => 'surgone'],
         ['name' => 'lens', 'data' => 'lens'],
-        ['name' => 'set', 'data' => 'set'],
+        ['name' => 'bed', 'data' => 'bed'],
         ['name' => 'ot', 'data' => 'ot'],
-        ['name' => 'total', 'data' => 'total'],
+        ['name' => 'status', 'data' => 'status'],
         ['name' => 'action', 'data' => 'action'],
     ];
     function user()
@@ -35,18 +35,22 @@ class AdmissionPatient extends Model
     {
         return $this->belongsTo(Gender::class);
     }
-    function referral()
+    function lens()
     {
-        return $this->belongsTo(Doctor::class);
+        return $this->belongsTo(Lens::class);
+    }
+    function bed()
+    {
+        return $this->belongsTo(Bed::class);
+    }
+    function operation()
+    {
+        return $this->belongsTo(Operation::class);
     }
 
-    function getMaxdiscountAttribute()
+    function gettotalAttribute()
     {
-        $data = $this->tests()->get();
-        $max = 0;
-        foreach ($data as $key => $item) {
-            $max += $item->test()->sum('referral_fee_amount');
-        }
-        return $max;
+        return $this->admission_fee + $this->ot_fee + $this->lens_fee + $this-> bed_fee;
+        
     }
 }
