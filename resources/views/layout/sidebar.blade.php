@@ -84,13 +84,19 @@
         <div id="pharmacy" class="collapse {{Request::is('pharmacy*')?'show':''}}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item {{Request::is('pharmacy/medicine')?'active':''}}" href="{{route('medicine.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Medicine</a>
-                <a class="collapse-item {{Request::is('pharmacy/medicine/supplier')?'active':''}}" href="{{route('medicine.supplier.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Supplier</a>
-                <a class="collapse-item {{Request::is('pharmacy/medicine/purchase')?'active':''}}" href="{{route('medicine.purchase.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Purchase</a>
-                <a class="collapse-item {{Request::is('pharmacy/medicine/customer')?'active':''}}" href="{{route('medicine.customer.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Customer</a>
-                <a class="collapse-item {{Request::is('pharmacy/medicine/sale')?'active':''}}" href="{{route('medicine.sale.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Sale List</a>
-                <a class="collapse-item {{Request::is('pharmacy/medicine/sale/create')?'active':''}}" href="{{route('medicine.sale.create')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Sale Create</a>
+                <a class="collapse-item {{Request::is('pharmacy/medicine/supplier')?'active':''}}" href="{{route('medicine.supplier.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Medicine Supplier</a>
+                <a class="collapse-item {{Request::is('pharmacy/medicine/purchase')?'active':''}}" href="{{route('medicine.purchase.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Medicine Purchase</a>
+                <a class="collapse-item {{Request::is('pharmacy/medicine/customer')?'active':''}}" href="{{route('medicine.customer.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Medicine Customer</a>
+                <a class="collapse-item {{Request::is('pharmacy/medicine/sale')?'active':''}}" href="{{route('medicine.sale.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Medicine Sale List</a>
+                <a class="collapse-item {{Request::is('pharmacy/medicine/sale/create')?'active':''}}" href="{{route('medicine.sale.create')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Medicne Sale Create</a>
                 <a class="collapse-item {{Request::is('pharmacy/glass')?'active':''}}" href="{{route('glass.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Glass</a>
                 <a class="collapse-item {{Request::is('pharmacy/frame')?'active':''}}" href="{{route('frame.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Frame</a>
+                <a class="collapse-item {{Request::is('pharmacy/frame/supplier')?'active':''}}" href="{{route('frame.supplier.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Frame Supplier</a>
+                <a class="collapse-item {{Request::is('pharmacy/glass/supplier')?'active':''}}" href="{{route('glass.supplier.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Glass Supplier</a>
+                <a class="collapse-item {{Request::is('pharmacy/glass/purchase')?'active':''}}" href="{{route('glass.purchase.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Glass Purchase</a>
+                <a class="collapse-item {{Request::is('pharmacy/frame/purchase')?'active':''}}" href="{{route('frame.purchase.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Frame Purchase</a>
+                <a class="collapse-item {{Request::is('pharmacy/glasses/sale')?'active':''}}" href="{{route('glasses.sale.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Glasses Sale List</a>
+                <a class="collapse-item {{Request::is('pharmacy/glasses/sale/create')?'active':''}}" href="{{route('glasses.sale.create')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Glasses Sale Create</a>
             </div>
         </div>
     </li>

@@ -1,19 +1,27 @@
-<x-admin title="Medicine Sale Create">
+<x-admin title="Medicine Purchase Edit">
     {{-- <x-page-header head="Doctor" /> --}}
-    <x-card header="Medicine Sale Create" links="{{ route('pathology.patient.index') }}" title="Patient List">
-        <x-form  method="post" action="{{ route('medicine.sale.store') }}">
+    <x-card header="Medicine Purchase Edit" links="{{ route('pathology.patient.index') }}" title="Patient List">
+        <x-form  method="post" action="{{ route('glasses.sale.update',$sale->id) }}">
             <div class="row">
                 <div class="col-md-8">
                     <div class="row">
-                        <x-input id="date" type="date" class="col-md-6" required />
+                        <x-input id="date" type="date" value="{{$sale->created_at->format('Y-m-d')}}" class="col-md-4" required />
+                        <x-input id="customer" value="{{$sale->name}}" class="col-md-4" required />
+                        <x-input id="phone" value="{{$sale->phone}}" class="col-md-4" required />
+                        
                         <div class="col-md-6">
-                            <x-select id="customer" :options="$customers" required />
+                            <label for="lens">Select Frame</label>
+                            <select name="frame" id="frame" data-live-search="true" title="Select frame" class="form-control selectpicker">
+                                @foreach ($frame as $key=>$item)
+                                    <option value="{{$item->id}}">{{$item->name}}</option>
+                                @endforeach
+                            </select>
                         </div>
-                        <div class="col-md-12">
-                            <label for="lens">Select Medicine</label>
-                            <select name="medicine" id="medicine" data-live-search="true" title="Select Medicine" class="form-control selectpicker">
-                                @foreach ($medicine as $key=>$item)
-                                    <option value="{{$item->id}}">{{$item->name}} [{{$item->type}}]</option>
+                        <div class="col-md-6">
+                            <label for="lens">Select Glass</label>
+                            <select name="glass" id="glass" data-live-search="true" title="Select glass" class="form-control selectpicker">
+                                @foreach ($glass as $key=>$item)
+                                    <option value="{{$item->id}}">{{$item->name}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -31,7 +39,32 @@
                                 </tr>
                             </thead>
                             <tbody id="test_table">
-
+                                @foreach ($sale->glass as $key=>$item)
+                                    <tr data-test-id="">
+                                        <td>{{++$key}}</td>
+                                        <td>{{$item->glass->name}}</td>
+                                        <td><input type="number" id="increment_subtotal" name="qty[]" class="form-control quantity" value="{{$item->qty}}" min="1"></td>
+                                        <input type="hidden" name="glass_price[]" class="price" value="{{$item->price}}">
+                                        <input type="hidden" name="glass_id[]" class="cost" value="{{$item->glass_id}}">
+                                        <td>{{$item->price}}</td>
+                                        <td class="subtotal">{{$item->qty * $item->price}}</td>
+                                        <input type="hidden" name="subtotal" class="subtotal" value="{{$item->qty * $item->price}}">
+                                        <td><a href="" class=" btn-danger btn-sm delete-tr"><i class="fa fa-fw fa-trash"></i></a></td>
+                                    </tr>
+                                @endforeach
+                                @foreach ($sale->frame as $key=>$item)
+                                    <tr data-test-id="">
+                                        <td>{{++$key}}</td>
+                                        <td>{{$item->frame->name}}</td>
+                                        <td><input type="number" id="increment_subtotal" name="qty[]" class="form-control quantity" value="{{$item->qty}}" min="1"></td>
+                                        <input type="hidden" name="frame_price[]" class="price" value="{{$item->price}}">
+                                        <input type="hidden" name="frame_id[]" class="cost" value="{{$item->frame_id}}">
+                                        <td>{{$item->price}}</td>
+                                        <td class="subtotal">{{$item->qty * $item->price}}</td>
+                                        <input type="hidden" name="subtotal" class="subtotal" value="{{$item->qty * $item->price}}">
+                                        <td><a href="" class=" btn-danger btn-sm delete-tr"><i class="fa fa-fw fa-trash"></i></a></td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -39,7 +72,7 @@
                 </div>
                 <div class="col-md-4">
                     <x-small-card header="Calculation Part">
-                        <x-inline-input id="sub_total" />
+                        <x-inline-input value="{{$sale->total_price}}" id="sub_total" />
                         <input type="hidden" id="max_discount" name="max_discount">
                         <div class="mb-3">
                             <div class="input-group">
@@ -47,25 +80,25 @@
                                     <div class="input-group-text w-100" id="max_discount" style="cursor: pointer">Discount</div>
                                 </div>
                                 <input type="text" class="form-control" max="100" id="discount_percent" name="discount_percent" placeholder="%">
-                                <input type="text" class="form-control" value="0" id="discount_amount" name="discount_amount"  placeholder="Amount">
+                                <input type="text" class="form-control" value="{{$sale->discount}}" id="discount_amount" name="discount_amount"  placeholder="Amount">
                             </div>
                         </div>
-                        <x-inline-input id="shipping_cost" value="0" />
-                        <x-inline-input id="total_payable" />
+                        <x-inline-input id="shipping_cost" value="{{$sale->shipping_cost}}" />
+                        <x-inline-input id="total_payable" value="{{$sale->grand_total}}" />
                         <div class="mb-3">
                             <div class="input-group">
                                 <div class="input-group-prepend" style="width: 40%">
                                     <div class="input-group-text w-100" id="paid_text" style="cursor: pointer">Paid</div>
                                 </div>
-                                <input type="text" class="form-control" id="paid" name="paid"  placeholder="Paid Amount">
+                                <input type="text" class="form-control" id="paid" name="paid" value="{{$sale->paid}}"  placeholder="Paid Amount">
                             </div>
                         </div>
-                        <x-inline-input id="change" />
+                        <x-inline-input id="change" value="{{$sale->changes}}" />
                     </x-small-card>
                     <button type="submit" class="btn btn-sm btn-primary mt-3"><i
                                                         class="fa fa-save"></i>
                                                     Save</button>
-                    <a href="{{ route('medicine.sale.create') }}"  class="btn btn-sm btn-success float-right mt-3">Clear form</a>
+                    
                 </div>
                 
             </div>
@@ -74,15 +107,6 @@
     </x-card>
 
     @push('js')
-        @if(session('invoice_id'))
-        <script>
-            window.open(
-                "{{ route('medicine.sale.invoice', session('invoice_id')) }}",
-                "_blank",
-                "width=900,height=700"
-            );
-        </script>
-        @endif
         <script>
           
             $(document).ready(function() {
@@ -90,7 +114,41 @@
                 var rowCount = 1;
 
                 // Use event delegation to handle dynamically added elements
-                $(document).on('change', '#medicine', function () {
+                $(document).on('change', '#glass', function () {
+                    var selectedValue = $(this).val();
+
+
+                    // Add new row if not exists
+                    $.get("/pharmacy/glasses/sale/find_glass/" + selectedValue, function (data) {
+                        console.log(data);
+                        
+                        $('#test_table').append(`
+                            <tr data-test-id="${selectedValue}">
+                                <td>${rowCount}</td>
+                                <td>${data.name}</td>
+                                <td>
+                                    <input type="number" id="increment_subtotal" name="qty[]" class="form-control quantity" value="1" min="1">
+                                </td>
+                                <input type="hidden" name="glass_price[]" class="price" value="${data.price}">
+                                <input type="hidden" name="stock[]" class="stock" value="${data.stock}">
+                                <input type="hidden" name="glass_id[]" value="${data.id}">
+                                <td>
+                                    ${data.price}</td>
+                                <td class="subtotal"></td>
+                                <input type="hidden" name="subtotal[]" class="subtotal-input" value="">
+                                <td>
+                                    <a href="#" class="btn-danger btn-sm delete-tr">
+                                        <i class="fa fa-fw fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        `);
+
+                        rowCount++;
+                        calculate();
+                    });
+                });
+                $(document).on('change', '#frame', function () {
                     var selectedValue = $(this).val();
 
                     // Find existing row
@@ -107,19 +165,19 @@
                     }
 
                     // Add new row if not exists
-                    $.get("/pharmacy/medicine/sale/find_medicine/" + selectedValue, function (data) {
+                    $.get("/pharmacy/glasses/sale/find_frame/" + selectedValue, function (data) {
                         console.log(data);
                         
                         $('#test_table').append(`
                             <tr data-test-id="${selectedValue}">
                                 <td>${rowCount}</td>
-                                <td>${data.name} [${data.type}]</td>
+                                <td>${data.name}</td>
                                 <td>
                                     <input type="number" id="increment_subtotal" name="qty[]" class="form-control quantity" value="1" min="1">
                                 </td>
-                                <input type="hidden" name="price[]" class="price" value="${data.price}">
+                                <input type="hidden" name="frame_price[]" class="price" value="${data.price}">
                                 <input type="hidden" name="stock[]" class="stock" value="${data.stock}">
-                                <input type="hidden" name="medicine_id[]" value="${data.id}">
+                                <input type="hidden" name="frame_id[]" value="${data.id}">
                                 <td>
                                     ${data.price}</td>
                                 <td class="subtotal"></td>
@@ -176,8 +234,7 @@
             function grandTotalCalculation(){
                 var subtotal = parseFloat($('#sub_total').val());
                 var discount = parseFloat($('#discount_amount').val());
-                var shipping_cost = parseFloat($('#shipping_cost').val());
-                var total_payable = subtotal - discount + shipping_cost;
+                var total_payable = subtotal - discount;
 
                 $('#total_payable').val(total_payable);
                 var paid = parseFloat($('#paid').val() || 0);
@@ -201,21 +258,11 @@
             }
             $('input[name="paid"]').on('input',function(){
                 grandTotalCalculation();
-            })
+            });
             $('input[name="discount_amount"],input[name="discount_percent"]').on('input',function(){
                 discount_calculate(parseFloat($(this).val()));
             })
             $(document).on('click keyup','#increment_subtotal',function(){
-                var stock = parseFloat($(this).closest('tr').find('.stock').val());
-                let qty = parseFloat($(this).val()) || 0;
-                
-                if (qty > stock) {
-                    alert('Quantity cannot be greater than available stock (' + stock + ').');
-                    $(this).val(stock); // or $(this).val('');
-                }
-                calculate();
-            });
-            $(document).on('click keyup','#shipping_cost',function(){
                 calculate();
             });
             $(document).on('click','.delete-tr',function(e){

@@ -21,9 +21,8 @@ class Frame extends Model
 
     function getstockAttribute()
     {
-        // $purchase = MedicinePurchaseItem::where('medicine_id',$this->id)->sum('qty');
-        // $sale = MedicineSaleItem::where('medicine_id',$this->id)->sum('qty');
-        // return $purchase - $sale;
-        return 0;
+        $purchase = FramePurchaseItem::where('frame_id',$this->id)->sum('qty');
+        $sale = FrameSaleItem::where('frame_id',$this->id)->sum('qty');
+        return $purchase - $sale;
     }
 }

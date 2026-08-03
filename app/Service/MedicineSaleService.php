@@ -74,6 +74,7 @@ class MedicineSaleService {
             $sale_data['discount_percent'] = $data['discount_percent'];
             $sale_data['discount'] = $data['discount_amount'];
             $sale_data['grand_total'] = $data['total_payable'];
+            $sale_data['changes'] = $data['change'];
             $sale_data['note'] = $data['note'] ?? null;
 
 
@@ -117,6 +118,7 @@ class MedicineSaleService {
             $sale_data['discount_percent'] = $data['discount_percent'];
             $sale_data['discount'] = $data['discount_amount'];
             $sale_data['grand_total'] = $data['total_payable'];
+            $sale_data['changes'] = $data['change'];
             $sale_data['note'] = $data['note'] ?? null;
 
 

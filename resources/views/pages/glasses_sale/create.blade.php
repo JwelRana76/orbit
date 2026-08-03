@@ -1,19 +1,26 @@
-<x-admin title="Medicine Sale Create">
+<x-admin title="Glasses Sale Create">
     {{-- <x-page-header head="Doctor" /> --}}
-    <x-card header="Medicine Sale Create" links="{{ route('pathology.patient.index') }}" title="Patient List">
-        <x-form  method="post" action="{{ route('medicine.sale.store') }}">
+    <x-card header="Glasses Sale Create" links="{{ route('pathology.patient.index') }}" title="Patient List">
+        <x-form  method="post" action="{{ route('glasses.sale.store') }}">
             <div class="row">
                 <div class="col-md-8">
                     <div class="row">
-                        <x-input id="date" type="date" class="col-md-6" required />
+                        <x-input id="date" type="date" class="col-md-4" value="{{date('Y-m-d')}}" required />
+                        <x-input id="customer" class="col-md-4" required />
+                        <x-input id="phone" class="col-md-4" required />
                         <div class="col-md-6">
-                            <x-select id="customer" :options="$customers" required />
+                            <label for="lens">Select Frame</label>
+                            <select name="frame" id="frame" data-live-search="true" title="Select frame" class="form-control selectpicker">
+                                @foreach ($frame as $key=>$item)
+                                    <option value="{{$item->id}}">{{$item->name}}</option>
+                                @endforeach
+                            </select>
                         </div>
-                        <div class="col-md-12">
-                            <label for="lens">Select Medicine</label>
-                            <select name="medicine" id="medicine" data-live-search="true" title="Select Medicine" class="form-control selectpicker">
-                                @foreach ($medicine as $key=>$item)
-                                    <option value="{{$item->id}}">{{$item->name}} [{{$item->type}}]</option>
+                        <div class="col-md-6">
+                            <label for="lens">Select Glass</label>
+                            <select name="glass" id="glass" data-live-search="true" title="Select glass" class="form-control selectpicker">
+                                @foreach ($glass as $key=>$item)
+                                    <option value="{{$item->id}}">{{$item->name}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -39,7 +46,7 @@
                 </div>
                 <div class="col-md-4">
                     <x-small-card header="Calculation Part">
-                        <x-inline-input id="sub_total" />
+                        <x-inline-input readonly id="sub_total" />
                         <input type="hidden" id="max_discount" name="max_discount">
                         <div class="mb-3">
                             <div class="input-group">
@@ -51,7 +58,7 @@
                             </div>
                         </div>
                         <x-inline-input id="shipping_cost" value="0" />
-                        <x-inline-input id="total_payable" />
+                        <x-inline-input readonly id="total_payable" />
                         <div class="mb-3">
                             <div class="input-group">
                                 <div class="input-group-prepend" style="width: 40%">
@@ -60,7 +67,7 @@
                                 <input type="text" class="form-control" id="paid" name="paid"  placeholder="Paid Amount">
                             </div>
                         </div>
-                        <x-inline-input id="change" />
+                        <x-inline-input readonly id="change" />
                     </x-small-card>
                     <button type="submit" class="btn btn-sm btn-primary mt-3"><i
                                                         class="fa fa-save"></i>
@@ -77,7 +84,7 @@
         @if(session('invoice_id'))
         <script>
             window.open(
-                "{{ route('medicine.sale.invoice', session('invoice_id')) }}",
+                "{{ route('glasses.sale.invoice', session('invoice_id')) }}",
                 "_blank",
                 "width=900,height=700"
             );
@@ -90,7 +97,41 @@
                 var rowCount = 1;
 
                 // Use event delegation to handle dynamically added elements
-                $(document).on('change', '#medicine', function () {
+                $(document).on('change', '#glass', function () {
+                    var selectedValue = $(this).val();
+
+
+                    // Add new row if not exists
+                    $.get("/pharmacy/glasses/sale/find_glass/" + selectedValue, function (data) {
+                        console.log(data);
+                        
+                        $('#test_table').append(`
+                            <tr data-test-id="${selectedValue}">
+                                <td>${rowCount}</td>
+                                <td>${data.name}</td>
+                                <td>
+                                    <input type="number" id="increment_subtotal" name="qty[]" class="form-control quantity" value="1" min="1">
+                                </td>
+                                <input type="hidden" name="glass_price[]" class="price" value="${data.price}">
+                                <input type="hidden" name="stock[]" class="stock" value="${data.stock}">
+                                <input type="hidden" name="glass_id[]" value="${data.id}">
+                                <td>
+                                    ${data.price}</td>
+                                <td class="subtotal"></td>
+                                <input type="hidden" name="subtotal[]" class="subtotal-input" value="">
+                                <td>
+                                    <a href="#" class="btn-danger btn-sm delete-tr">
+                                        <i class="fa fa-fw fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        `);
+
+                        rowCount++;
+                        calculate();
+                    });
+                });
+                $(document).on('change', '#frame', function () {
                     var selectedValue = $(this).val();
 
                     // Find existing row
@@ -107,19 +148,19 @@
                     }
 
                     // Add new row if not exists
-                    $.get("/pharmacy/medicine/sale/find_medicine/" + selectedValue, function (data) {
+                    $.get("/pharmacy/glasses/sale/find_frame/" + selectedValue, function (data) {
                         console.log(data);
                         
                         $('#test_table').append(`
                             <tr data-test-id="${selectedValue}">
                                 <td>${rowCount}</td>
-                                <td>${data.name} [${data.type}]</td>
+                                <td>${data.name}</td>
                                 <td>
                                     <input type="number" id="increment_subtotal" name="qty[]" class="form-control quantity" value="1" min="1">
                                 </td>
-                                <input type="hidden" name="price[]" class="price" value="${data.price}">
+                                <input type="hidden" name="frame_price[]" class="price" value="${data.price}">
                                 <input type="hidden" name="stock[]" class="stock" value="${data.stock}">
-                                <input type="hidden" name="medicine_id[]" value="${data.id}">
+                                <input type="hidden" name="frame_id[]" value="${data.id}">
                                 <td>
                                     ${data.price}</td>
                                 <td class="subtotal"></td>

@@ -11,17 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('medicine_sales', function (Blueprint $table) {
+        Schema::create('glass_purchases', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
-            $table->string('saleid');
+            $table->foreignId('glass_supplier_id')->constrained('glass_suppliers')->onDelete('cascade');
+            $table->string('chalan_no');
             $table->string('total_qty');
             $table->double('total_price');
-            $table->float('discount_percent')->nullable();
+            $table->double('shipping_cost')->nullable();
             $table->double('discount')->nullable();
             $table->double('grand_total');
-            $table->double('changes');
+            $table->double('paid_amount')->nullable();
             $table->text('note')->nullable();
             $table->timestamps();
         });
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('medicine_sales');
+        Schema::dropIfExists('glass_purchases');
     }
 };

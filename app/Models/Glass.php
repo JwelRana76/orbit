@@ -21,9 +21,8 @@ class Glass extends Model
 
     function getstockAttribute()
     {
-        // $purchase = MedicinePurchaseItem::where('medicine_id',$this->id)->sum('qty');
-        // $sale = MedicineSaleItem::where('medicine_id',$this->id)->sum('qty');
-        // return $purchase - $sale;
-        return 0;
+        $purchase = GlassPurchaseItem::where('glass_id',$this->id)->sum('qty');
+        $sale = GlassSaleItem::where('glass_id',$this->id)->sum('qty');
+        return $purchase - $sale;
     }
 }

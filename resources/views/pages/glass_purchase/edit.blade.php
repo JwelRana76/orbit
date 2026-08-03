@@ -1,18 +1,19 @@
-<x-admin title="Medicine Sale Create">
+<x-admin title="glass Purchase Edit">
     {{-- <x-page-header head="Doctor" /> --}}
-    <x-card header="Medicine Sale Create" links="{{ route('pathology.patient.index') }}" title="Patient List">
-        <x-form  method="post" action="{{ route('medicine.sale.store') }}">
+    <x-card header="glass Purchase Edit" links="{{ route('pathology.patient.index') }}" title="Patient List">
+        <x-form  method="post" action="{{ route('glass.purchase.update',$purchase->id) }}">
             <div class="row">
                 <div class="col-md-8">
                     <div class="row">
-                        <x-input id="date" type="date" class="col-md-6" required />
-                        <div class="col-md-6">
-                            <x-select id="customer" :options="$customers" required />
+                        <x-input id="date" type="date" value="{{$purchase->created_at->format('Y-m-d')}}" class="col-md-4" required />
+                        <x-input id="chalan_no" value="{{$purchase->chalan_no}}" class="col-md-4" required />
+                        <div class="col-md-4">
+                            <x-select id="supplier" :options="$supplier" selectedId="{{ $purchase->glass_supplier_id }}" required />
                         </div>
                         <div class="col-md-12">
-                            <label for="lens">Select Medicine</label>
-                            <select name="medicine" id="medicine" data-live-search="true" title="Select Medicine" class="form-control selectpicker">
-                                @foreach ($medicine as $key=>$item)
+                            <label for="lens">Select Lens</label>
+                            <select name="lens" id="lens" data-live-search="true" title="Select Lens" class="form-control selectpicker">
+                                @foreach ($glasses as $key=>$item)
                                     <option value="{{$item->id}}">{{$item->name}} [{{$item->type}}]</option>
                                 @endforeach
                             </select>
@@ -25,13 +26,26 @@
                                     <th>SL No.</th>
                                     <th>Name</th>
                                     <th style="width:100px">Unit</th>
-                                    <th>Rate</th>
+                                    <th style="width:100px">Rate</th>
                                     <th>Sub Total</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody id="test_table">
-
+                                @foreach ($purchase->items as $key=>$item)
+                                    <tr data-test-id="">
+                                        <td>{{++$key}}</td>
+                                        <td>{{$item->glass->name}}</td>
+                                        <td><input type="number" id="increment_subtotal" name="qty[]" class="form-control quantity" value="{{$item->qty}}" min="1"></td>
+                                        <input type="hidden" name="glass_id[]" value="{{$item->glass_id}}">
+                                        <td>
+                                            <input type="number" id="increment_subtotal" name="cost[]" class="form-control cost" value="{{$item->price}}" min="1">
+                                        </td>
+                                        <td class="subtotal">{{$item->qty * $item->price}}</td>
+                                        <input type="hidden" name="subtotal" class="subtotal" value="{{$item->qty * $item->price}}">
+                                        <td><a href="" class=" btn-danger btn-sm delete-tr"><i class="fa fa-fw fa-trash"></i></a></td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -39,7 +53,7 @@
                 </div>
                 <div class="col-md-4">
                     <x-small-card header="Calculation Part">
-                        <x-inline-input id="sub_total" />
+                        <x-inline-input value="{{$purchase->total_price}}" id="sub_total" />
                         <input type="hidden" id="max_discount" name="max_discount">
                         <div class="mb-3">
                             <div class="input-group">
@@ -47,25 +61,25 @@
                                     <div class="input-group-text w-100" id="max_discount" style="cursor: pointer">Discount</div>
                                 </div>
                                 <input type="text" class="form-control" max="100" id="discount_percent" name="discount_percent" placeholder="%">
-                                <input type="text" class="form-control" value="0" id="discount_amount" name="discount_amount"  placeholder="Amount">
+                                <input type="text" class="form-control" value="{{$purchase->discount}}" id="discount_amount" name="discount_amount"  placeholder="Amount">
                             </div>
                         </div>
-                        <x-inline-input id="shipping_cost" value="0" />
-                        <x-inline-input id="total_payable" />
+                        <x-inline-input id="shipping_cost" value="{{$purchase->shipping_cost}}" />
+                        <x-inline-input id="total_payable" value="{{$purchase->grand_total}}" />
                         <div class="mb-3">
                             <div class="input-group">
                                 <div class="input-group-prepend" style="width: 40%">
                                     <div class="input-group-text w-100" id="paid_text" style="cursor: pointer">Paid</div>
                                 </div>
-                                <input type="text" class="form-control" id="paid" name="paid"  placeholder="Paid Amount">
+                                <input type="text" class="form-control" id="paid" name="paid" value="{{$purchase->paid_amount}}"  placeholder="Paid Amount">
                             </div>
                         </div>
-                        <x-inline-input id="change" />
+                        <x-inline-input id="due" value="{{$purchase->grand_total - $purchase->paid_amount}}" />
                     </x-small-card>
                     <button type="submit" class="btn btn-sm btn-primary mt-3"><i
                                                         class="fa fa-save"></i>
                                                     Save</button>
-                    <a href="{{ route('medicine.sale.create') }}"  class="btn btn-sm btn-success float-right mt-3">Clear form</a>
+                    
                 </div>
                 
             </div>
@@ -74,15 +88,6 @@
     </x-card>
 
     @push('js')
-        @if(session('invoice_id'))
-        <script>
-            window.open(
-                "{{ route('medicine.sale.invoice', session('invoice_id')) }}",
-                "_blank",
-                "width=900,height=700"
-            );
-        </script>
-        @endif
         <script>
           
             $(document).ready(function() {
@@ -90,7 +95,7 @@
                 var rowCount = 1;
 
                 // Use event delegation to handle dynamically added elements
-                $(document).on('change', '#medicine', function () {
+                $(document).on('change', '#lens', function () {
                     var selectedValue = $(this).val();
 
                     // Find existing row
@@ -107,21 +112,18 @@
                     }
 
                     // Add new row if not exists
-                    $.get("/pharmacy/medicine/sale/find_medicine/" + selectedValue, function (data) {
-                        console.log(data);
-                        
+                    $.get("/pharmacy/medicine/purchase/find_medicine/" + selectedValue, function (data) {
                         $('#test_table').append(`
                             <tr data-test-id="${selectedValue}">
                                 <td>${rowCount}</td>
-                                <td>${data.name} [${data.type}]</td>
+                                <td>${data.name}</td>
                                 <td>
                                     <input type="number" id="increment_subtotal" name="qty[]" class="form-control quantity" value="1" min="1">
                                 </td>
-                                <input type="hidden" name="price[]" class="price" value="${data.price}">
-                                <input type="hidden" name="stock[]" class="stock" value="${data.stock}">
-                                <input type="hidden" name="medicine_id[]" value="${data.id}">
+                                <input type="hidden" name="glass_id[]" value="${data.id}">
                                 <td>
-                                    ${data.price}</td>
+                                    <input type="number" id="increment_subtotal" name="cost[]" class="form-control cost" value="${data.cost}" min="1">
+                                </td>
                                 <td class="subtotal"></td>
                                 <input type="hidden" name="subtotal[]" class="subtotal-input" value="">
                                 <td>
@@ -148,7 +150,7 @@
                 var total_subtotal = 0;
 
                 $('#test_table').find('.quantity').each(function(index, item) {
-                    var rate = parseFloat($(item).closest('tr').find('.price').val());
+                    var rate = parseFloat($(item).closest('tr').find('.cost').val());
                     var quantity = parseFloat($(item).val());
                     var subtotal = rate * quantity;
 
@@ -181,8 +183,8 @@
 
                 $('#total_payable').val(total_payable);
                 var paid = parseFloat($('#paid').val() || 0);
-                var change = total_payable - paid;
-                $('#change').val(Math.abs(change));
+                var due = total_payable - paid;
+                $('#due').val(due);
             }
             function discount_calculate(InputValue){
                 var subtotal = parseFloat($('#sub_total').val());
@@ -200,19 +202,17 @@
                 grandTotalCalculation();
             }
             $('input[name="paid"]').on('input',function(){
+                var payable = parseFloat($('#total_payable').val());
+                if(payable < parseFloat($(this).val())){
+                    alert(`You can't pay more than ${payable}`);
+                    $(this).val(payable);
+                }
                 grandTotalCalculation();
             })
             $('input[name="discount_amount"],input[name="discount_percent"]').on('input',function(){
                 discount_calculate(parseFloat($(this).val()));
             })
             $(document).on('click keyup','#increment_subtotal',function(){
-                var stock = parseFloat($(this).closest('tr').find('.stock').val());
-                let qty = parseFloat($(this).val()) || 0;
-                
-                if (qty > stock) {
-                    alert('Quantity cannot be greater than available stock (' + stock + ').');
-                    $(this).val(stock); // or $(this).val('');
-                }
                 calculate();
             });
             $(document).on('click keyup','#shipping_cost',function(){

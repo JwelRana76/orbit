@@ -96,7 +96,7 @@
 
     <tr>
         <td>Customer</td>
-        <td class="right">{{$sale->customer->name}}</td>
+        <td class="right">{{$sale->name}}</td>
     </tr>
 
     <tr>
@@ -122,11 +122,26 @@
 
     <tbody>
 
-    @foreach($sale->items as $item)
+    @foreach($sale->glass as $item)
 
         <tr>
             <td>
-                {{ ucwords(strtolower($item->medicine->name)) }}
+                {{ ucwords(strtolower($item->glass->name ?? null)) }}
+            </td>
+            <td class="right">
+                {{$item->qty}} × {{$item->price}}
+            </td>
+            <td class="right">
+                {{$item->qty * $item->price}}
+            </td>
+        </tr>
+
+    @endforeach
+    @foreach($sale->frame as $item)
+
+        <tr>
+            <td>
+                {{ ucwords(strtolower($item->frame->name ?? null)) }}
             </td>
             <td class="right">
                 {{$item->qty}} × {{$item->price}}
@@ -167,19 +182,13 @@
     </tr>
 
     <tr class="bold">
-        <td>Due</td>
+        <td>Change</td>
         <td class="right">{{$sale->changes}}</td>
     </tr>
 
 </table>
 
 <div class="line"></div>
-
-<div>
-    <strong>Customer Address</strong><br>
-    {{$sale->customer->address}}<br>
-    {{$sale->customer->contact}}
-</div>
 
 <div class="line"></div>
 

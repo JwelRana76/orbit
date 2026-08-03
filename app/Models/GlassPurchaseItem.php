@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class FrameSaleItem extends Model
+class GlassPurchaseItem extends Model
 {
     use HasFactory;
+
     protected $guarded = ['id'];
 
-    public function frame()
+    public function glass()
     {
-        return $this->belongsTo(Frame::class, 'frame_id', 'id');
+        return $this->belongsTo(Glass::class, 'glass_id', 'id');
     }
 }

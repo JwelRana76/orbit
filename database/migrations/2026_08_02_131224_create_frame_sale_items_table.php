@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('frame_sale_items', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('rate');
-            $table->string('max_discount');
+            $table->foreignId('glasses_sale_id')->constrained('glasses_sales')->onDelete('cascade');
+            $table->foreignId('frame_id')->constrained('frames')->onDelete('cascade');
+            $table->string('qty');
+            $table->string('price');
             $table->timestamps();
         });
     }

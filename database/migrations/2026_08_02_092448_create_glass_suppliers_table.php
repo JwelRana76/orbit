@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('glass_sale_items', function (Blueprint $table) {
+        Schema::create('glass_suppliers', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('rate');
-            $table->string('max_discount');
+            $table->string('contact');
+            $table->text('address');
+            $table->boolean('status')->comment("1=Active/0=Deactive")->default(true);
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('glass_sale_items');
+        Schema::dropIfExists('glass_suppliers');
     }
 };

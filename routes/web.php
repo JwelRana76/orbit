@@ -15,8 +15,13 @@ use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\FrameController;
+use App\Http\Controllers\FramePurchaseController;
+use App\Http\Controllers\FrameSupplierController;
 use App\Http\Controllers\GenderController;
 use App\Http\Controllers\GlassController;
+use App\Http\Controllers\GlassesSaleController;
+use App\Http\Controllers\GlassPurchaseController;
+use App\Http\Controllers\GlassSupplierController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\LenProviderController;
 use App\Http\Controllers\LensController;
@@ -232,8 +237,8 @@ Route::group(['middleware'=>['auth']], function() {
         Route::get('/delete/{id}',[MedicinePurchaseController::class, 'delete'])->name('delete');
         Route::get('/find_medicine/{id}',[MedicinePurchaseController::class, 'medicineFind']);
         Route::get('/invoice/{id}',[MedicinePurchaseController::class, 'invoice'])->name('invoice');
-        Route::post('payment',[MedicinePurchaseController::class,'payment'])->name('payment');
-        Route::get('paymentdelete/{id}',[MedicinePurchaseController::class,'paymentDelete'])->name('paymentDelete');
+        Route::post('/payment',[MedicinePurchaseController::class,'payment'])->name('payment');
+        Route::get('/paymentdelete/{id}',[MedicinePurchaseController::class,'paymentDelete'])->name('paymentDelete');
     });
     Route::group(['prefix' => 'pharmacy/medicine/sale', 'as' => 'medicine.sale.'], function () {
         Route::get('/',[MedicineSaleController::class, 'index'])->name('index');
@@ -244,8 +249,8 @@ Route::group(['middleware'=>['auth']], function() {
         Route::get('/delete/{id}',[MedicineSaleController::class, 'delete'])->name('delete');
         Route::get('/find_medicine/{id}',[MedicineSaleController::class, 'medicineFind'])->name('findMedicine');
         Route::get('/invoice/{id}',[MedicineSaleController::class, 'invoice'])->name('invoice');
-        Route::post('payment',[MedicineSaleController::class,'payment'])->name('payment');
-        Route::get('paymentdelete/{id}',[MedicineSaleController::class,'paymentDelete'])->name('paymentDelete');
+        Route::post('/payment',[MedicineSaleController::class,'payment'])->name('payment');
+        Route::get('/paymentdelete/{id}',[MedicineSaleController::class,'paymentDelete'])->name('paymentDelete');
     });
     Route::group(['prefix' => 'pharmacy/glass', 'as' => 'glass.'], function () {
         Route::get('/',[GlassController::class,'index'])->name('index');
@@ -258,6 +263,59 @@ Route::group(['middleware'=>['auth']], function() {
         Route::post('/store',[FrameController::class,'store'])->name('store');
         Route::get('/edit/{id}',[FrameController::class, 'edit'])->name('edit');
         Route::get('/delete/{id}',[FrameController::class, 'delete'])->name('delete');
+    });
+    Route::group(['prefix' => 'pharmacy/glass/supplier', 'as' => 'glass.supplier.'], function () {
+        Route::get('/',[GlassSupplierController::class,'index'])->name('index');
+        Route::post('/store',[GlassSupplierController::class,'store'])->name('store');
+        Route::get('/edit/{id}',[GlassSupplierController::class, 'edit'])->name('edit');
+        Route::get('/delete/{id}',[GlassSupplierController::class, 'delete'])->name('delete');
+        Route::post('/payment',[GlassSupplierController::class, 'payment'])->name('payment');
+        Route::get('/payment/details/{id}',[GlassSupplierController::class, 'paymentDetails'])->name('paymentDetails');
+    });
+    Route::group(['prefix' => 'pharmacy/frame/supplier', 'as' => 'frame.supplier.'], function () {
+        Route::get('/',[FrameSupplierController::class,'index'])->name('index');
+        Route::post('/store',[FrameSupplierController::class,'store'])->name('store');
+        Route::get('/edit/{id}',[FrameSupplierController::class, 'edit'])->name('edit');
+        Route::get('/delete/{id}',[FrameSupplierController::class, 'delete'])->name('delete');
+        Route::post('/payment',[FrameSupplierController::class, 'payment'])->name('payment');
+        Route::get('/payment/details/{id}',[FrameSupplierController::class, 'paymentDetails'])->name('paymentDetails');
+    });
+    Route::group(['prefix' => 'pharmacy/glass/purchase', 'as' => 'glass.purchase.'], function () {
+        Route::get('/',[GlassPurchaseController::class, 'index'])->name('index');
+        Route::get('/create',[GlassPurchaseController::class, 'create'])->name('create');
+        Route::post('/store',[GlassPurchaseController::class, 'store'])->name('store');
+        Route::get('/edit/{id}',[GlassPurchaseController::class, 'edit'])->name('edit');
+        Route::post('/update/{id}',[GlassPurchaseController::class, 'update'])->name('update');
+        Route::get('/delete/{id}',[GlassPurchaseController::class, 'delete'])->name('delete');
+        Route::get('/find_medicine/{id}',[GlassPurchaseController::class, 'medicineFind']);
+        Route::get('/invoice/{id}',[GlassPurchaseController::class, 'invoice'])->name('invoice');
+        Route::post('/payment',[GlassPurchaseController::class,'payment'])->name('payment');
+        Route::get('/paymentdelete/{id}',[GlassPurchaseController::class,'paymentDelete'])->name('paymentDelete');
+    });
+    Route::group(['prefix' => 'pharmacy/frame/purchase', 'as' => 'frame.purchase.'], function () {
+        Route::get('/',[FramePurchaseController::class, 'index'])->name('index');
+        Route::get('/create',[FramePurchaseController::class, 'create'])->name('create');
+        Route::post('/store',[FramePurchaseController::class, 'store'])->name('store');
+        Route::get('/edit/{id}',[FramePurchaseController::class, 'edit'])->name('edit');
+        Route::post('/update/{id}',[FramePurchaseController::class, 'update'])->name('update');
+        Route::get('/delete/{id}',[FramePurchaseController::class, 'delete'])->name('delete');
+        Route::get('/find_medicine/{id}',[FramePurchaseController::class, 'medicineFind']);
+        Route::get('/invoice/{id}',[FramePurchaseController::class, 'invoice'])->name('invoice');
+        Route::post('/payment',[FramePurchaseController::class,'payment'])->name('payment');
+        Route::get('/paymentdelete/{id}',[FramePurchaseController::class,'paymentDelete'])->name('paymentDelete');
+    });
+    Route::group(['prefix' => 'pharmacy/glasses/sale', 'as' => 'glasses.sale.'], function () {
+        Route::get('/',[GlassesSaleController::class, 'index'])->name('index');
+        Route::get('/create',[GlassesSaleController::class, 'create'])->name('create');
+        Route::post('/store',[GlassesSaleController::class, 'store'])->name('store');
+        Route::get('/edit/{id}',[GlassesSaleController::class, 'edit'])->name('edit');
+        Route::post('/update/{id}',[GlassesSaleController::class, 'update'])->name('update');
+        Route::get('/delete/{id}',[GlassesSaleController::class, 'delete'])->name('delete');
+        Route::get('/find_glass/{id}',[GlassesSaleController::class, 'glass'])->name('findglass');
+        Route::get('/find_frame/{id}',[GlassesSaleController::class, 'frame'])->name('findframe');
+        Route::get('/invoice/{id}',[GlassesSaleController::class, 'invoice'])->name('invoice');
+        Route::post('/payment',[GlassesSaleController::class, 'payment'])->name('payment');
+        Route::get('/paymentdelete/{id}',[GlassesSaleController::class, 'paymentDelete'])->name('paymentDelete');
     });
     // Pharmacy section end 
     // academic route section end 

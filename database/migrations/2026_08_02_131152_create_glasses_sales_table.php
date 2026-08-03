@@ -13,9 +13,17 @@ return new class extends Migration
     {
         Schema::create('glasses_sales', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('name');
-            $table->string('rate');
-            $table->string('max_discount');
+            $table->string('phone');
+            $table->string('saleid');
+            $table->string('total_qty');
+            $table->double('total_price');
+            $table->float('discount_percent')->nullable();
+            $table->double('discount')->nullable();
+            $table->double('grand_total');
+            $table->double('changes');
+            $table->text('note')->nullable();
             $table->timestamps();
         });
     }

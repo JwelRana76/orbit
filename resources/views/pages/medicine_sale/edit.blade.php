@@ -5,9 +5,9 @@
             <div class="row">
                 <div class="col-md-8">
                     <div class="row">
-                        <x-input id="date" type="date" value="{{$sale->created_at->format('Y-m-d')}}" class="col-md-4" required />
+                        <x-input id="date" type="date" value="{{$sale->created_at->format('Y-m-d')}}" class="col-md-6" required />
                         
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <x-select id="customer" :options="$customer" selectedId="{{ $sale->customer_id }}" required />
                         </div>
                         <div class="col-md-12">
@@ -73,7 +73,7 @@
                                 <input type="text" class="form-control" id="paid" name="paid" value="{{$sale->paid}}"  placeholder="Paid Amount">
                             </div>
                         </div>
-                        <x-inline-input id="due" value="{{$sale->grand_total - $sale->paid}}" />
+                        <x-inline-input id="change" value="{{$sale->changes}}" />
                     </x-small-card>
                     <button type="submit" class="btn btn-sm btn-primary mt-3"><i
                                                         class="fa fa-save"></i>
@@ -180,8 +180,8 @@
 
                 $('#total_payable').val(total_payable);
                 var paid = parseFloat($('#paid').val() || 0);
-                var due = total_payable - paid;
-                $('#due').val(due);
+                var change = total_payable - paid;
+                $('#change').val(Math.abs(change));
             }
             function discount_calculate(InputValue){
                 var subtotal = parseFloat($('#sub_total').val());
@@ -199,11 +199,7 @@
                 grandTotalCalculation();
             }
             $('input[name="paid"]').on('input',function(){
-                var payable = parseFloat($('#total_payable').val());
-                if(payable < parseFloat($(this).val())){
-                    alert(`You can't pay more than ${payable}`);
-                    $(this).val(payable);
-                }
+                
                 grandTotalCalculation();
             });
             $('input[name="discount_amount"],input[name="discount_percent"]').on('input',function(){
