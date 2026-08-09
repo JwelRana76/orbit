@@ -39,6 +39,9 @@ class MedicineSale extends Model
     }
     public function getPaidAttribute()
     {
-        return $this->payment()->sum('amount');
+        $paid = $this->payment()->sum('amount');
+        $change = $this->getRawOriginal('changes');
+
+        return $paid - (float) $change;
     }
 }

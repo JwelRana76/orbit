@@ -97,6 +97,19 @@
                 <a class="collapse-item {{Request::is('pharmacy/frame/purchase')?'active':''}}" href="{{route('frame.purchase.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Frame Purchase</a>
                 <a class="collapse-item {{Request::is('pharmacy/glasses/sale')?'active':''}}" href="{{route('glasses.sale.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Glasses Sale List</a>
                 <a class="collapse-item {{Request::is('pharmacy/glasses/sale/create')?'active':''}}" href="{{route('glasses.sale.create')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Glasses Sale Create</a>
+                <a class="collapse-item {{Request::is('pharmacy/expense')?'active':''}}" href="{{route('pharmacy.expense.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> Expense</a>
+            </div>
+        </div>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{Request::is('expense*')?'':'collapsed'}}" href="#" data-toggle="collapse" data-target="#expense"
+            aria-expanded="true" aria-controls="expense">
+            <i class="fas fa-fw fa-home"></i>
+            <span>Expense</span>
+        </a>
+        <div id="expense" class="collapse {{Request::is('expense*')?'show':''}}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item {{Request::is('expense*')?'active':''}}" href="{{route('expense.index')}}"><i class="fas fa-fw fa-arrow-right mr-2"></i> List</a>
             </div>
         </div>
     </li>
@@ -122,6 +135,7 @@
         <div id="collapsePages" class="collapse {{Request::is('setting*')?'show':''}}" aria-labelledby="headingPages" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item {{Request::is('setting/doctor*')?'active':''}}" href="{{ route('doctor.index') }}"> <i class="fas fa-fw fa-arrow-right mr-2"></i>Doctor</a>
+                <a class="collapse-item {{Request::is('setting/referal*')?'active':''}}" href="{{ route('referal.index') }}"> <i class="fas fa-fw fa-arrow-right mr-2"></i>Referal</a>
                 <a class="collapse-item {{Request::is('setting/bed*')?'active':''}}" href="{{ route('bed.index') }}"> <i class="fas fa-fw fa-arrow-right mr-2"></i>Bed</a>
                 <a class="collapse-item {{Request::is('setting/operation*')?'active':''}}" href="{{ route('ot.index') }}"> <i class="fas fa-fw fa-arrow-right mr-2"></i>Operation</a>
                 <a class="collapse-item {{Request::is('setting/division*')?'active':''}}" href="{{ route('division.index') }}"> <i class="fas fa-fw fa-arrow-right mr-2"></i>Division</a>

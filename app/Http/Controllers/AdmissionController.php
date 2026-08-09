@@ -101,4 +101,21 @@ class AdmissionController extends Controller
         $bed = Bed::findOrFail($patient->bed_id)->update(['status' => false]);
         return back()->with('success','Patient Released Successfully');
     }
+    function readmit(Request $request){
+        $patient = AdmissionPatient::findOrFail($request->patient_id);
+        $patient->update([
+            'status' => true,
+            'bed_id' => $request->bed_id,
+            'created_at' => now(),
+        ]);
+        return back()->with('success','Patient Re-Admited Successfully');
+    }
+    function lens(Request $request){
+        
+        $patient = AdmissionPatient::findOrFail($request->patient_id);
+        $patient->update([
+            'lens_id' => $request->lens_id,
+        ]);
+        return back()->with('success','Patient Lens Provided Successfully');
+    }
 }

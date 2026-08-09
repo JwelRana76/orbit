@@ -13,9 +13,8 @@ class AdmissionPatient extends Model
 
     public static $columns = [
         ['name' => 'date', 'data' => 'date'],
-        ['name' => 'name', 'data' => 'name'],
-        ['name' => 'age', 'data' => 'age'],
-        ['name' => 'contact', 'data' => 'contact'],
+        ['name' => 'reg_no', 'data' => 'reg_no'],
+        ['name' => 'patient', 'data' => 'patient'],
         ['name' => 'surgone', 'data' => 'surgone'],
         ['name' => 'lens', 'data' => 'lens'],
         ['name' => 'bed', 'data' => 'bed'],

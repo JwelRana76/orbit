@@ -14,6 +14,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\FrameController;
 use App\Http\Controllers\FramePurchaseController;
 use App\Http\Controllers\FrameSupplierController;
@@ -33,6 +34,8 @@ use App\Http\Controllers\MedicineSaleController;
 use App\Http\Controllers\MedicineSupplierController;
 use App\Http\Controllers\OtController;
 use App\Http\Controllers\PathologyPatientController;
+use App\Http\Controllers\PharmacyExpenseController;
+use App\Http\Controllers\ReferalController;
 use App\Http\Controllers\ReligionController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\SectionController;
@@ -139,6 +142,12 @@ Route::group(['middleware'=>['auth']], function() {
         Route::get('/edit/{id}',[OtController::class, 'edit'])->name('edit');
         Route::get('/delete/{id}',[OtController::class, 'delete'])->name('delete');
     });
+    Route::group(['prefix' => 'setting/referal', 'as' => 'referal.'], function () {
+        Route::get('/',[ReferalController::class, 'index'])->name('index');
+        Route::post('/store',[ReferalController::class, 'store'])->name('store');
+        Route::get('/edit/{id}',[ReferalController::class, 'edit'])->name('edit');
+        Route::get('/delete/{id}',[ReferalController::class, 'delete'])->name('delete');
+    });
     // Academic section route start
     Route::group(['prefix' => 'pathology/test', 'as' => 'test.'], function () {
         Route::get('/',[TestController::class,'index'])->name('index');
@@ -155,7 +164,8 @@ Route::group(['middleware'=>['auth']], function() {
         Route::get('/delete/{id}',[PathologyPatientController::class, 'delete'])->name('delete');
         Route::get('/test_find/{id}',[PathologyPatientController::class ,'testFind']);
         Route::get('/invoice/{id}',[PathologyPatientController::class, 'invoice'])->name('invoice');
-    });
+        Route::get('/report/{id}',[PathologyPatientController::class, 'report'])->name('report');
+        });
 
     // Lens router section started 
     Route::group(['prefix' => 'lens/index', 'as' => 'lens.'], function () {
@@ -203,6 +213,8 @@ Route::group(['middleware'=>['auth']], function() {
         Route::post('/payment',[AdmissionController::class, 'payment'])->name('payment');
         Route::get('/release/{id}',[AdmissionController::class, 'release'])->name('release');
         Route::post('/cancel',[AdmissionController::class, 'cancel'])->name('cancel');
+        Route::post('/lens',[AdmissionController::class, 'lens'])->name('lens');
+        Route::post('/readmit',[AdmissionController::class, 'readmit'])->name('readmit');
     });
 
     // Pharmacy Section start 
@@ -317,9 +329,21 @@ Route::group(['middleware'=>['auth']], function() {
         Route::post('/payment',[GlassesSaleController::class, 'payment'])->name('payment');
         Route::get('/paymentdelete/{id}',[GlassesSaleController::class, 'paymentDelete'])->name('paymentDelete');
     });
+    Route::group(['prefix' => 'pharmacy/expense', 'as' => 'pharmacy.expense.'], function () {
+        Route::get('/',[PharmacyExpenseController::class,'index'])->name('index');
+        Route::post('/store',[PharmacyExpenseController::class,'store'])->name('store');
+        Route::get('/edit/{id}',[PharmacyExpenseController::class, 'edit'])->name('edit');
+        Route::get('/delete/{id}',[PharmacyExpenseController::class, 'delete'])->name('delete');
+    });
     // Pharmacy section end 
+    
     // academic route section end 
-
+    Route::group(['prefix' => 'expense', 'as' => 'expense.'], function () {
+        Route::get('/',[ExpenseController::class,'index'])->name('index');
+        Route::post('/store',[ExpenseController::class,'store'])->name('store');
+        Route::get('/edit/{id}',[ExpenseController::class, 'edit'])->name('edit');
+        Route::get('/delete/{id}',[ExpenseController::class, 'delete'])->name('delete');
+    });
     // hrm section router start 
     Route::group(['prefix' => 'hrm/department', 'as' => 'department.'], function () {
         Route::get('/',[DepartmentController::class, 'index'])->name('index');

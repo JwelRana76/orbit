@@ -43,8 +43,11 @@ class PathologyPatientService {
         }
         return $badges;
       })
+      ->addColumn('report', function ($item) {
+        return $item->report == true ? '<span class="badge badge-primary">Delevered</span>':'<span class="badge badge-info">Pending</span>';
+      })
       ->addColumn('action', fn ($item) => view('pages.pathology_patient.action', compact('item'))->render())
-      ->rawColumns(['test', 'action'])
+      ->rawColumns(['test', 'action','report'])
       ->make(true);
   }
   function store($data)

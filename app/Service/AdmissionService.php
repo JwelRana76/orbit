@@ -16,9 +16,9 @@ class AdmissionService {
     $patient = $this->model::latest('id')->first();
 
     if ($patient) {
-        $unique_id = date('m') . '/' . date('Y') . '/' . ($patient->id + 1);
+        $unique_id = date('m') . '-' . date('Y') . '-' . ($patient->id + 1);
     } else {
-        $unique_id = date('m') . '/' . date('Y') . '/1';
+        $unique_id = date('m') . '-' . date('Y') . '-1';
     }
     return $unique_id;
   }
@@ -29,11 +29,14 @@ class AdmissionService {
       ->addColumn('date', function ($item) {
         return $item->created_at->format('d-M-Y');
       })
+      ->addColumn('patient', function ($item) {
+        return $item->name . '<br>Age:-' . $item->age .'<br>'.$item->contact;
+      })
       ->addColumn('surgone', function ($item) {
         return $item->doctor->name;
       })
       ->addColumn('lens', function ($item) {
-        return $item->lens->name ?? null;
+        return ($item->lens?->name ?? '') . '<br>' . ($item->lens?->power ?? '');
       })
       ->addColumn('bed', function ($item) {
         return $item->bed->name ?? null;
@@ -49,7 +52,7 @@ class AdmissionService {
         };
       })
       ->addColumn('action', fn ($item) => view('pages.admission_patient.action', compact('item'))->render())
-      ->rawColumns(['action','status'])
+      ->rawColumns(['action','status','patient','lens'])
       ->make(true);
   }
   function store($data)

@@ -6,6 +6,7 @@ use App\Models\Test;
 use App\Models\Doctor;
 use App\Models\Gender;
 use App\Models\PathologyPatient;
+use App\Models\Referal;
 use App\Models\Religion;
 use App\Service\PathologyPatientService;
 use Illuminate\Http\Request;
@@ -34,8 +35,9 @@ class PathologyPatientController extends Controller
         // return view('404');
         $gender = Gender::all();
         $doctors = Doctor::where('is_active', 1)->get();
+        $referal = Referal::get();
         $tests = Test::where('is_active', 1)->get();
-        return view('pages.pathology_patient.create', compact('doctors', 'tests', 'gender'));
+        return view('pages.pathology_patient.create', compact('doctors', 'tests', 'gender','referal'));
     }
     function testFind($id)
     {
@@ -74,5 +76,9 @@ class PathologyPatientController extends Controller
         // return view('404');
         $message = $this->baseService->delete($id);
         return redirect()->route('pathology.patient.index')->with($message);
+    }
+    function report($id){
+        PathologyPatient::findOrFail($id)->update(['report' => true]);
+        return redirect()->route('pathology.patient.index')->with('success','Reported Successfully');
     }
 }

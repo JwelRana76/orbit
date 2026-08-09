@@ -12,7 +12,12 @@
         @if ($item->status == true)
         <button type="button" class="dropdown-item" data-toggle="modal" data-target="#cancelModal" data-id="{{$item->id}}" ><i class="fas fa-fw fa-arrow-left"></i> Cancel</button>
         @endif
-        {{-- @endif --}}
+        @if ($item->status != null)
+        <button type="button" class="dropdown-item" data-toggle="modal" data-target="#lensModel" data-id="{{$item->id}}" ><i class="fas fa-fw fa-arrow-left"></i> Lens Provide</button>
+        @endif
+        @if ($item->status == null)
+        <button type="button" class="dropdown-item" data-toggle="modal" data-target="#readmitModel" data-id="{{$item->id}}" ><i class="fas fa-fw fa-arrow-left"></i> Re-Admit</button>
+        @endif
         @if ($item->payment_status == false && $item->status != null)
             <button type="button" class="dropdown-item" data-toggle="modal" data-target="#paymentModal" data-id="{{$item->id}}" ><i class="fa fa-fw text-primary fa-file"></i> Payment</button>
         @endif

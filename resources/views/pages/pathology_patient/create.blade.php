@@ -20,7 +20,7 @@
                             <x-select id="doctor" name="doctor_id" :options="$doctors" class="col-md-4" />
                         </div>
                         <div class="col-md-6">
-                            <x-select id="referal" name="referal_id" :options="$doctors" class="col-md-4" />
+                            <x-select id="referal" name="referal_id" :options="$referal" class="col-md-4" />
                         </div>
                         <div class="col-md-12">
                             <x-select id="pathologytest" name="test_id" :options="$tests" key="code" class="col-md-4" />

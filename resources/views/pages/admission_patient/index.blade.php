@@ -81,9 +81,75 @@
     </div>
   </div>
 </div>
+@php
+    $lens = DB::table('lenses')->where('status',true)->get();
+@endphp
+<div class="modal fade" id="lensModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <x-form method="post" action="{{ route('admission.patient.lens') }}">
+            <input type="hidden" name="patient_id" id="patient_id">
+            <div class="mb-3" id="ot_section">
+              <label for="">Lens</label>
+              <select name="lens_id" id="lens_id" class="form-control selectpicker" title="Select lens">
+                @foreach ($lens as $key=>$item)
+                    <option value="{{$item->id}}">{{$item->name}}</option>
+                @endforeach
+              </select>
+            </div>
+            <x-button value="Submit" />
+        </x-form>
+      </div>
+    </div>
+  </div>
+</div>
+@php
+    $beds = DB::table('beds')->where('status',false)->get();
+@endphp
+<div class="modal fade" id="readmitModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <x-form method="post" action="{{ route('admission.patient.readmit') }}">
+            <input type="hidden" name="patient_id" id="patient_id">
+            <div class="mb-3" id="ot_section">
+              <label for="">Lens</label>
+              <select name="bed_id" id="bed_id" class="form-control selectpicker" title="Select Bed">
+                @foreach ($beds as $key=>$item)
+                    <option value="{{$item->id}}">{{$item->name}}</option>
+                @endforeach
+              </select>
+            </div>
+            <x-button value="Submit" />
+        </x-form>
+      </div>
+    </div>
+  </div>
+</div>
 @push('js')
     <script>
         $(document).ready(function() {
+            $('#readmitModel').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var id = button.data('id');
+                $('#readmitModel #patient_id').val(id);
+            });
+            $('#lensModel').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var id = button.data('id');
+                $('#lensModel #patient_id').val(id);
+            });
             $('#paymentModal').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget);
                 var id = button.data('id');

@@ -32,7 +32,9 @@ return new class extends Migration
             $table->float('discount_percent')->nullable();
             $table->double('grand_total');
             $table->double('paid');
+            $table->text('note')->nullable();
             $table->boolean('is_active')->default(true);
+            $table->boolean('report')->default(false);
             $table->timestamps();
         });
     }

@@ -20,6 +20,7 @@ class PathologyPatient extends Model
         ['name' => 'total', 'data' => 'total'],
         ['name' => 'discount', 'data' => 'discount_amount'],
         ['name' => 'grand_total', 'data' => 'grand_total'],
+        ['name' => 'report', 'data' => 'report'],
         ['name' => 'action', 'data' => 'action'],
     ];
     function tests()

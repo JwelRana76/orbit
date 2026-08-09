@@ -3,7 +3,7 @@
         <table class="table table-striped w-100" id="{{ $id }}">
             <thead>
                 <tr>
-                    <th>
+                    <th width="50px">
                         <label for="dtb_all_selector" class="itd-checkbox" style="margin-top: -10px;">
                             <input type="checkbox" id="dtb_all_selector" class="custom-checkbox" />
                             <span class="checkmark"></span>
